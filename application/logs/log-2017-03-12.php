@@ -1,0 +1,40 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2017-03-12 12:34:41 --> Severity: error --> Exception: syntax error, unexpected ';', expecting ']' /Applications/MAMP/htdocs/sistema-agua-potable/application/models/projects/Tools_project.php 327
+ERROR - 2017-03-12 19:07:41 --> Severity: Notice --> Undefined property: User::$db /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:07:41 --> Severity: error --> Exception: Call to a member function query() on null /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:07:41 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Exceptions.php:271) /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Common.php 578
+ERROR - 2017-03-12 19:07:42 --> Severity: Notice --> Undefined property: User::$db /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:07:42 --> Severity: error --> Exception: Call to a member function query() on null /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:07:42 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Exceptions.php:271) /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Common.php 578
+ERROR - 2017-03-12 19:07:43 --> Severity: Notice --> Undefined property: User::$db /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:07:43 --> Severity: error --> Exception: Call to a member function query() on null /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:07:43 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Exceptions.php:271) /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Common.php 578
+ERROR - 2017-03-12 19:07:46 --> Severity: Notice --> Undefined property: User::$db /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:07:46 --> Severity: error --> Exception: Call to a member function query() on null /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:07:46 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Exceptions.php:271) /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Common.php 578
+ERROR - 2017-03-12 19:07:46 --> Severity: Notice --> Undefined property: User::$db /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:07:46 --> Severity: error --> Exception: Call to a member function query() on null /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:07:46 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Exceptions.php:271) /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Common.php 578
+ERROR - 2017-03-12 19:07:47 --> Severity: Notice --> Undefined property: User::$db /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:07:47 --> Severity: error --> Exception: Call to a member function query() on null /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:07:47 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Exceptions.php:271) /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Common.php 578
+ERROR - 2017-03-12 19:10:45 --> Severity: Notice --> Undefined variable: my_id /Applications/MAMP/htdocs/sistema-agua-potable/application/controllers/Dashboard.php 1099
+ERROR - 2017-03-12 19:10:45 --> Severity: Notice --> Undefined property: User::$db /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:10:45 --> Severity: error --> Exception: Call to a member function query() on null /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:10:45 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Exceptions.php:271) /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Common.php 578
+ERROR - 2017-03-12 19:11:03 --> Severity: Notice --> Undefined property: User::$db /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:11:03 --> Severity: error --> Exception: Call to a member function query() on null /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:11:03 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Exceptions.php:271) /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Common.php 578
+ERROR - 2017-03-12 19:11:06 --> Severity: Notice --> Undefined property: User::$db /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:11:06 --> Severity: error --> Exception: Call to a member function query() on null /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 577
+ERROR - 2017-03-12 19:11:06 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Exceptions.php:271) /Applications/MAMP/htdocs/sistema-agua-potable/system/core/Common.php 578
+ERROR - 2017-03-12 19:11:54 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELEC * FROM ga_user WHERE id = 1' at line 1 - Invalid query: SELEC * FROM ga_user WHERE id = 1
+ERROR - 2017-03-12 19:11:54 --> Severity: error --> Exception: Call to a member function load() on string /Applications/MAMP/htdocs/sistema-agua-potable/system/database/DB_driver.php 1743
+ERROR - 2017-03-12 19:13:35 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELEC * FROM ga_user WHERE id = 1' at line 1 - Invalid query: SELEC * FROM ga_user WHERE id = 1
+ERROR - 2017-03-12 19:13:35 --> Severity: error --> Exception: Call to a member function load() on string /Applications/MAMP/htdocs/sistema-agua-potable/system/database/DB_driver.php 1743
+ERROR - 2017-03-12 19:14:31 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELEC * FROM ga_user WHERE id = 1' at line 1 - Invalid query: SELEC * FROM ga_user WHERE id = 1
+ERROR - 2017-03-12 19:14:31 --> Severity: error --> Exception: Call to a member function load() on string /Applications/MAMP/htdocs/sistema-agua-potable/system/database/DB_driver.php 1743
+ERROR - 2017-03-12 19:24:27 --> Severity: Notice --> Trying to get property of non-object /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 602
+ERROR - 2017-03-12 19:24:30 --> Severity: Notice --> Trying to get property of non-object /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 602
+ERROR - 2017-03-12 19:24:36 --> Severity: Notice --> Trying to get property of non-object /Applications/MAMP/htdocs/sistema-agua-potable/application/libraries/User.php 602

@@ -1,0 +1,14 @@
+{
+  "front-test":
+  {
+    "dir"     : "frontend",
+    "model"   : "main",
+    "action"  : "index"
+  },
+  "get-looking":
+  {
+    "dir"     : "frontend",
+    "model"   : "looking",
+    "action"  : "index"
+  }
+}
