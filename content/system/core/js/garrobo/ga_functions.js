@@ -180,8 +180,14 @@ var ga_request = (location  , data = {} , result = function(){} ,  sender = null
         {
             if(sender != null)
             {
-                $("#" + sender.id).html(sender.html());
+                if(typeof sender == "function")
+                {
+                    sender();
+                }else {
+                    $("#" + sender.id).html(sender.html());
+                }
             }
+
         },
         success: (r) =>
         {

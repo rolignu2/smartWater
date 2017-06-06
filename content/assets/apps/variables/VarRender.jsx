@@ -43,6 +43,7 @@ class Vars extends  React.Component{
         this.add_variable       =  this.add_variable.bind(this);
         this.getText            =  this.getText.bind(this);
         this.save_data          =  this.save_data.bind(this);
+        this.saveVariable       =  this.saveVariable.bind(this);
 
     }
 
@@ -83,9 +84,71 @@ class Vars extends  React.Component{
 
     }
 
-    save_data(){
+
+    saveVariable(data){
+
+        let e = false;
+        let x = $("tr[id='" + data.cod +"']");
+
+        if(String(data.format) == "-1")
+            e = true;
+        else if(String(data.type) == "-1")
+            e = true;
+        else if(String(data.pin) == "-1")
+            e = true;
+
+        if(e){
+            x.css({
+                    'border-style': 'dashed',
+                    'opacity': '0.75',
+                    'border-color': 'red',
+                    'border-width': '2px'
+            });
+
+            $("#var-msj").html("<b class='alert alert-warning'>Los campos como nombre , pin , tipo y formato son obligatorios</b>");
+
+            return false;
+        }
+        else{
+            x.css({
+                'border-style': 'none',
+                'opacity': '1'
+            });
+        }
 
 
+        data.device = this.state.device.id_device;
+
+
+        let result = function (r) {
+
+
+            let j = JSON.parse(r);
+            if(j.id >= 1){
+                $("#act_" + data.cod ).text("Subir Al photon ");
+            }
+
+
+            $("#opt_" + data.cod )
+                .find("div[id='load_']")
+                .css({ "display" : "none" });
+
+        };
+
+
+        $("#opt_" + data.cod )
+            .find("div[id='load_']")
+            .css({ "display" : "inline" });
+
+
+        project_data.variables.save(data , result  );
+
+
+    }
+
+    save_data( ){
+
+        console.log("CONSOLE -> GUARDANDO VARIABLES ....");
         var data = this.state.table.data;
 
        $("#table-data").find("tr").each(function () {
@@ -107,10 +170,10 @@ class Vars extends  React.Component{
 
 
 
-
-
        var active       = false;
        var conflict     = 0 ;
+
+
 
        for(let i in data ){
 
@@ -131,7 +194,7 @@ class Vars extends  React.Component{
                        p = true;
                        break;
                    }
-                   else if(data[k].pin == "-1" ){
+                   else if(String(data[k].pin) == "-1" ){
                        p = true ;
                        break;
                    }
@@ -171,6 +234,11 @@ class Vars extends  React.Component{
                    'opacity': '1'
                });
 
+               x.css({
+                   'border-style': 'none',
+                   'opacity': '1'
+               });
+
                if(active == false)
                    $("#var-msj").html("");
 
@@ -188,10 +256,19 @@ class Vars extends  React.Component{
         //si existen conflictos entonces no guardara la data nada mas
         if(conflict >= 1) return;
 
+
+        //vamos a agregar las variables a la base de datos
+
+        for(let k in data ){
+            //las variables se agregan de forma asincrona
+            this.saveVariable(data[k]);
+
+        }
+
     }
 
     edit_variable(event){
-        console.log(event);
+        //console.log(event);
     }
 
     add_variable(){
@@ -369,10 +446,32 @@ class Vars extends  React.Component{
                          </div>
 
                      </td>
-                     <td>
-
+                     <td id={"act_" + c } >
+                         ...
                      </td>
                      <td>
+
+                         <div id={"opt_" + c } >
+                             <div style={{display : "none"}} id="load_" class="margin-bottom-5">
+                                 <a className=" filter-submit margin-bottom">
+                                     <i className="fa fa-spinner" aria-hidden="true"></i>
+                                 </a>
+                             </div>
+
+                             <div style={{display : "none"}} id="save_" class="margin-bottom-5">
+                                 <a className=" filter-submit margin-bottom">
+                                     <i className="fa fa-floppy-o" aria-hidden="true"></i>
+                                 </a>
+                             </div>
+
+                             <div style={{display : "none"}} id="upload_" class="margin-bottom-5">
+                                 <a className=" filter-submit margin-bottom">
+                                     <i className="icon-cloud-upload" aria-hidden="true"></i>
+                                 </a>
+                             </div>
+
+                         </div>
+
 
                      </td>
                  </tr>

@@ -5,7 +5,7 @@ get_instance()->load->interfaces("Generic");
 class Tools_devices extends CI_Model implements Generic
 {
 
-    protected $tables                   = null ;
+    public $tables                      = null ;
 
     protected $url_particle             = null ;
 

@@ -5,9 +5,69 @@ class Variables extends CI_Model implements CoreInterface
 {
 
 
+    public  $variable_table = "";
+
     public function __construct()
     {
         parent::__construct();
+        //creamos una instancia al tool devices
+        $this->load->model("photon/tools_devices" );
+        //obtenemos la tabla con su prefijo
+        $this->variable_table = $this->tools_devices->tables->variables;
+        //instancia del usuario
+        $this->load->library("user");
+        //database
+        $this->load->database();
+
+    }
+
+
+    public function save_variables(){
+
+        $data = $this->input->post() ?? NULL;
+
+        if($data == NULL) {
+            return json_encode([
+                "error"  => true  ,
+                "msj"    => "La informacion procesada es erronea"
+            ]);
+        }
+
+        //{"cod":"40169","name":"var1","pin":"7",
+        //"type":"AO",
+        //"format":"d",
+        //"active":"1",
+        //"actions":{"in_device":"-1",
+        //"delete":"false","update":"false"},
+        //"device":"3"}
+
+
+        $data = (object) $data;
+        $date = new DateTime("now");
+
+
+        $this->db->insert($this->variable_table , [
+
+            "id_device"     => $data->device,
+            "id_user"       => $this->user->get()->id(),
+            "name"          => $data->name ,
+            "type"          => $data->type,
+            "pin"           => $data->pin,
+            "state"         => $data->active,
+            "enabled"       => 0,
+            "create_date"   => $date->format("Y-m-d h:M:s"),
+            "format"        => $data->format,
+            "code"          => $data->cod
+        ]);
+
+
+        return json_encode([
+            "error"   => false ,
+            "msj"     => "Variables guardadas con exito ",
+            "code"    => $data->cod,
+            "id"      => $this->db->insert_id()
+        ]);
+
     }
 
     /**
@@ -35,7 +95,7 @@ class Variables extends CI_Model implements CoreInterface
             return $this->load->view('variables/error' , '' , TRUE );
 
 
-        $this->load->model("photon/tools_devices" );
+
 
         $device = $this->tools_devices->get_all_device($id_device);
 
@@ -232,4 +292,7 @@ class Variables extends CI_Model implements CoreInterface
     public function _actions()
     {
         // TODO: Implement _actions() method.
-}}
+    }
+
+
+}

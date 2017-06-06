@@ -191,8 +191,6 @@ var project_data =
         $.getJSON( $p_  , particle_);
     },
 
-
-
     get_particle_request : function ($function , $params = null , $act = ''  ) {
 
         if($params == null ) return false;
@@ -209,10 +207,28 @@ var project_data =
 
         return true;
 
+    },
+
+    variables : {
+
+        save : function (data , result , wait ) {
+
+            let  request  = {
+                dir : "variables",
+                func : "save_variables" ,
+                model : "variables"
+            };
+
+
+            ga_request( request , data , result );
+
+        }
+
+
     }
 
-
 };
+
 
 
 project_data.loaders();
