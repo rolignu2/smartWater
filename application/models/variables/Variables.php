@@ -7,6 +7,7 @@ class Variables extends CI_Model implements CoreInterface
 
     public  $variable_table = "";
 
+
     public function __construct()
     {
         parent::__construct();
@@ -41,9 +42,41 @@ class Variables extends CI_Model implements CoreInterface
         //"delete":"false","update":"false"},
         //"device":"3"}
 
-
         $data = (object) $data;
         $date = new DateTime("now");
+
+
+        //verificamos si existe la variable por medio de su codigo
+        $exist = json_decode($this->tools_devices->get_variablesWithCode($data->cod));
+
+
+        if(count($exist) >= 1){
+
+            $this->db->where('code', $data->cod);
+            $this->db->update($this->variable_table ,[
+
+                "id_device"     => $data->device,
+                "id_user"       => $this->user->get()->id(),
+                "name"          => $data->name ,
+                "type"          => $data->type,
+                "pin"           => $data->pin,
+                "state"         => $data->active,
+                "enabled"       => 0,
+                "create_date"   => $date->format("Y-m-d h:M:s"),
+                "format"        => $data->format
+            ] );
+
+
+            return json_encode([
+                "error"   => false ,
+                "msj"     => "Variable actualizada con exito  ->" . $data->cod ,
+                "code"    => $data->cod,
+                "id"      => null,
+                "type"    => "update"
+            ]);
+
+        }
+
 
 
         $this->db->insert($this->variable_table , [
@@ -65,7 +98,8 @@ class Variables extends CI_Model implements CoreInterface
             "error"   => false ,
             "msj"     => "Variables guardadas con exito ",
             "code"    => $data->cod,
-            "id"      => $this->db->insert_id()
+            "id"      => $this->db->insert_id(),
+            "type"    => "insert"
         ]);
 
     }

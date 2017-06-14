@@ -4,6 +4,21 @@ class Vars extends  React.Component{
     constructor(props){
 
         super(props);
+        let vars = JSON.parse(this.props.variables);
+
+         //conversion de variables ya agregadas
+         let data = [];
+         for(let i in vars){
+            data.push({
+                cod     : vars[i].code,
+                name    : vars[i].name,
+                pin     : vars[i].pin,
+                type    : vars[i].type,
+                format  : vars[i].format,
+                active  : vars[i].state,
+                enabled : vars[i].enabled
+            });
+         }
 
         this.state = {
 
@@ -12,8 +27,8 @@ class Vars extends  React.Component{
             status : -1,
             time   : 0,
             table  : {
-                count  : 0 ,
-                data   : [],
+                count  : data.length ,
+                data   : data,
                 pins   : []
             },
             particle : {
@@ -44,14 +59,16 @@ class Vars extends  React.Component{
         this.getText            =  this.getText.bind(this);
         this.save_data          =  this.save_data.bind(this);
         this.saveVariable       =  this.saveVariable.bind(this);
+        this.save_cloud         =  this.save_cloud.bind(this);
+        this.save_photon_var    =  this.save_photon_var.bind(this);
 
     }
 
-    componentWillMount()
-    {
+    componentWillMount() {
 
         var $this = this;
         var t     = this.get_calc();
+
 
         setInterval(function () {
 
@@ -76,6 +93,8 @@ class Vars extends  React.Component{
 
             });
 
+
+
         } , t );
 
 
@@ -84,9 +103,22 @@ class Vars extends  React.Component{
 
     }
 
+    save_cloud(){
+
+       let d = this.state.table.data;
+       for(let i in d){
+            this.save_photon_var(d[i] , i);
+       }
+    }
+
+    save_photon_var(data , i){
+
+    }
 
     saveVariable(data){
 
+
+        var $this = this;
         let e = false;
         let x = $("tr[id='" + data.cod +"']");
 
@@ -124,9 +156,32 @@ class Vars extends  React.Component{
 
 
             let j = JSON.parse(r);
-            if(j.id >= 1){
-                $("#act_" + data.cod ).text("Subir Al photon ");
+            console.log( "CONSOLE -> " +  j.msj);
+
+            switch(String(j.type)){
+                case "insert":
+
+                    if(j.id >= 1){
+                        $("#act_" + data.cod ).html('<i title="Subir al photon ..." class="fa fa-cloud-upload" aria-hidden="true"></i><i title="Guardado de forma correcta" class="fa fa-check-circle" aria-hidden="true"></i>');
+                    }
+                    else {
+                        $("#act_" + data.cod ).html('<i title="Error al subir ..." class="fa fa-exclamation" aria-hidden="true"></i>');
+                    }
+
+                    break;
+                case "update":
+                    $("#act_" + data.cod ).html('<i title="Actualizar al photon" class="fa fa-cloud-upload" aria-hidden="true"></i>');
+                    break;
             }
+
+
+
+           for(let i in $this.state.table.data){
+                if(typeof $this.state.table.data[i].cod == j.code){
+                    console.log("CONSOLE -> PHOTON ENABLED TO " + j.code + " ITS CERO");
+                    $this.state.table.data[i].enabled = 0;
+                }
+           }
 
 
             $("#opt_" + data.cod )
@@ -267,10 +322,6 @@ class Vars extends  React.Component{
 
     }
 
-    edit_variable(event){
-        //console.log(event);
-    }
-
     add_variable(){
 
         console.log("Console: Agregando Variable ... ");
@@ -286,12 +337,7 @@ class Vars extends  React.Component{
             pin         : -1 ,
             type        : "",
             format      : "",
-            active      : true,
-            actions     : {
-                  in_device : -1 ,
-                  delete    : false,
-                  update    : false
-            }
+            active      : true
 
         };
 
@@ -370,7 +416,7 @@ class Vars extends  React.Component{
 
 
 
-             if(d.active ){
+             if(d.active == 1 ){
                  active.push(<option value="1" selected="selected" >Si</option>);
                  active.push(<option value="0"  >No</option>);
              }
@@ -379,15 +425,38 @@ class Vars extends  React.Component{
                  active.push(<option value="1"  >Si</option>);
              }
 
+
+             //tipo de datos
              let type_data = $.map($serv.var_type , function (b) {
-                  return (<option value={b.value}>{b.name}</option>);
+                  if(d.type == b.value )
+                    return (<option selected="selected" value={b.value}>{b.name}</option>);
+                  else
+                      return (<option  value={b.value}>{b.name}</option>);
              }) ;
 
-
+             //el formato de la data
              let format_data= $.map($serv.var_format , function (b) {
-                 return (<option value={b.value}>{b.name}</option>);
+                 if(d.format == b.value )
+                    return (<option selected="selected" value={b.value}>{b.name}</option>);
+                 else
+                     return (<option value={b.value}>{b.name}</option>);
              }) ;
 
+
+             let varState = [] ;
+             let system_state = {};
+             if(typeof d.enabled !== 'undefined' && d.enabled == 0){
+                 varState.push(<i title="Actualizar al photon" className="fa fa-cloud-upload" aria-hidden="true"></i>);
+                 system_state = { display : 'block' }
+             }
+             else if(typeof d.enabled !== 'undefined' && d.enabled == 1){
+                 varState.push(<i title="Variable creada en el photon" className="fa fa-bolt" aria-hidden="true"></i>);
+                 system_state = { display : 'block' }
+             }
+             else {
+                 varState.push(<i title="Variable no creada" className="fa fa-plus-circle" aria-hidden="true"></i>);
+                 system_state = { display : 'none' }
+             }
 
 
 
@@ -447,7 +516,7 @@ class Vars extends  React.Component{
 
                      </td>
                      <td id={"act_" + c } >
-                         ...
+                         {varState}
                      </td>
                      <td>
 
@@ -458,13 +527,8 @@ class Vars extends  React.Component{
                                  </a>
                              </div>
 
-                             <div style={{display : "none"}} id="save_" class="margin-bottom-5">
-                                 <a className=" filter-submit margin-bottom">
-                                     <i className="fa fa-floppy-o" aria-hidden="true"></i>
-                                 </a>
-                             </div>
 
-                             <div style={{display : "none"}} id="upload_" class="margin-bottom-5">
+                             <div style={system_state} id="upload_" class="margin-bottom-5">
                                  <a className=" filter-submit margin-bottom">
                                      <i className="icon-cloud-upload" aria-hidden="true"></i>
                                  </a>
@@ -531,7 +595,7 @@ class Vars extends  React.Component{
     render (){
 
 
-        console.log(this.state);
+       // console.log(this.state);
 
         return(
 
@@ -557,13 +621,10 @@ class Vars extends  React.Component{
                                 </span>
                             </div>
                             <div className="actions">
-                                <a onClick={this.edit_variable} title="Agregar variable" className="btn btn-circle btn-icon-only btn-default" href="javascript:;">
-                                    <i className="fa fa fa-pencil"></i>
-                                </a>
                                 <a onClick={this.add_variable} title="Agregar variable" className="btn btn-circle btn-icon-only btn-default" href="javascript:;">
                                     <i className="fa fa-plus"></i>
                                 </a>
-                                <a title="Subir al dsispositivo" className="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                <a onClick={this.save_cloud} title="Subir al dispositivo" className="btn btn-circle btn-icon-only btn-default" href="javascript:;">
                                     <i className="icon-cloud-upload"></i>
                                 </a>
                                 <a onClick={this.save_data} title="guardar data" className="btn btn-circle btn-icon-only btn-default" href="javascript:;">

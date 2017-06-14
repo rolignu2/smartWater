@@ -46,7 +46,8 @@ class Tools_devices extends CI_Model implements Generic
 
         "variables" => [
 
-            "get"   => "SELECT * FROM [table] g where g.id_device = ? "
+            "get"           => "SELECT * FROM [table] g where g.id_device = ? " ,
+            "get_code"      => "SELECT * FROM [table] g where g.code = ?"
 
         ]
     ];
@@ -93,7 +94,6 @@ class Tools_devices extends CI_Model implements Generic
         // TODO: Implement Object() method.
     }
 
-
     public function get_variables($id_device = 0){
 
        if($id_device === 0 ) return json_encode([]);
@@ -107,6 +107,17 @@ class Tools_devices extends CI_Model implements Generic
         if( count($result) == 0 ) return json_encode([]);
         else return json_encode($result);
 
+    }
+
+    public function get_variablesWithCode($code){
+        $query  = set_database_query($this->tables->variables
+                    ,"[table]"
+                    ,$this->querys["variables"]["get_code"]);
+
+        $result = $this->db->query($query , [$code])->result() ;
+
+        if( count($result) == 0 ) return json_encode([]);
+        else return json_encode($result);
     }
 
     public function find_devices($device_id = null , $project = null ){
