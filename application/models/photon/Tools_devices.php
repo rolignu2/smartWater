@@ -11,6 +11,8 @@ class Tools_devices extends CI_Model implements Generic
 
     protected $url_photon               = null ;
 
+    protected $war_photon               = null ;
+
     protected $querys = [
 
 
@@ -58,6 +60,10 @@ class Tools_devices extends CI_Model implements Generic
         $this->Load_();
     }
 
+    public function get_war(){
+        return $this->war_photon;
+    }
+
     public function Load_($objects = null)
     {
         // TODO: Implement Load_() method.
@@ -71,6 +77,8 @@ class Tools_devices extends CI_Model implements Generic
         $this->tables->variables    = $this->db->dbprefix("variables");
         $this->url_particle         = $this->meta->get_meta_value("particle_url");
         $this->url_photon           = $this->meta->get_meta_value("particle_photon_get");
+        $this->war_photon           = $this->meta->get_meta_value("war");
+
 
     }
 

@@ -32,6 +32,7 @@
     var $phurl = '<?= $phurl ?>';
     var $dev   = '<?= $dev ?>';
     var $vdata = '<?= $variables ?>';
+    var $war   = '<?= $war ?>';
 
     var $serv  = {
         cmd : {

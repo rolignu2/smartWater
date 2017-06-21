@@ -59,8 +59,8 @@ class Vars extends  React.Component{
         this.getText            =  this.getText.bind(this);
         this.save_data          =  this.save_data.bind(this);
         this.saveVariable       =  this.saveVariable.bind(this);
-        this.save_cloud         =  this.save_cloud.bind(this);
-        this.save_photon_var    =  this.save_photon_var.bind(this);
+        this.save_on_cloud      =  this.save_on_cloud.bind(this);
+        this.delete_variable    =  this.delete_variable.bind(this);
 
     }
 
@@ -103,15 +103,74 @@ class Vars extends  React.Component{
 
     }
 
-    save_cloud(){
 
-       let d = this.state.table.data;
-       for(let i in d){
-            this.save_photon_var(d[i] , i);
-       }
+    save_on_cloud(event = null , id = null ){
+
+        if(event !== null )
+            id      = String($(event.target).parent().attr("id")).replace("su_" , "");
+
+        let data = this.state.table.data;
+        var $this = this;
+        for(let i in data){
+
+            if(data[i].cod === id ){
+
+                $("#opt_" + id ).find("div[id='load_']").css({display : "block"});
+                this._hideVar(data);
+                var result = function ( r  ) {
+
+
+                    if(typeof  r === 'object'){
+
+                        if(typeof r.statusText !== 'undefined' && r.statusText === 'timeout'){
+                            alert("En estos momentos no podemos subir la variable.\n Verifique si el dispositivo esta encendido. ");
+                        }
+                        else{
+                            alert("Error desconocido :S");
+                        }
+                    }
+                    else {
+
+                    }
+
+
+                    $("#opt_" + id ).find("div[id='load_']").css({display : "none"});
+                    $this._hideVar(data, false);
+
+                };
+
+                project_data.variables.save_cloud(data[i] , result  , {
+                    url         : $phurl ,
+                    war         : $war ,
+                    device      : this.state.device.particle_id,
+                    token       : this.state.device.token_id
+
+                })
+            }
+
+        }
+
     }
 
-    save_photon_var(data , i){
+
+    _hideVar(data , hide = true ){
+
+        for(let i in data){
+            let cod = data[i].cod;
+            switch(hide){
+                case true:
+                    $("#su_" + cod).css({display : "none"})
+                    break;
+                case false:
+                    $("#su_" + cod).css({display : "block"})
+                    break;
+            }
+
+        }
+
+    }
+
+    delete_variable(event ){
 
     }
 
@@ -458,6 +517,17 @@ class Vars extends  React.Component{
                  system_state = { display : 'none' }
              }
 
+             if(this.state.status == -1 || this.state.status == 0 ){
+                 system_state = { display : 'none' }
+             }
+
+             let var_go ={}
+             if(typeof  d.enabled  !== 'undefined'){
+                 var_go = { display : "block" };
+             }else {
+                 var_go = {display : "none" }
+             }
+
 
 
              return (
@@ -529,8 +599,14 @@ class Vars extends  React.Component{
 
 
                              <div style={system_state} id="upload_" class="margin-bottom-5">
-                                 <a className=" filter-submit margin-bottom">
+                                 <a id={"su_" + c } href="javascript:void(0)" onClick={this.save_on_cloud} className=" filter-submit margin-bottom">
                                      <i className="icon-cloud-upload" aria-hidden="true"></i>
+                                 </a>
+                             </div>
+
+                             <div id={"del_" + c} style={var_go} id="upload_" class="margin-bottom-5">
+                                 <a id={"udel_" + c } href="javascript:void(0)" onClick={this.delete_variable} className=" filter-submit margin-bottom">
+                                     <i className="fa fa-trash-o" aria-hidden="true"></i>
                                  </a>
                              </div>
 
@@ -623,9 +699,6 @@ class Vars extends  React.Component{
                             <div className="actions">
                                 <a onClick={this.add_variable} title="Agregar variable" className="btn btn-circle btn-icon-only btn-default" href="javascript:;">
                                     <i className="fa fa-plus"></i>
-                                </a>
-                                <a onClick={this.save_cloud} title="Subir al dispositivo" className="btn btn-circle btn-icon-only btn-default" href="javascript:;">
-                                    <i className="icon-cloud-upload"></i>
                                 </a>
                                 <a onClick={this.save_data} title="guardar data" className="btn btn-circle btn-icon-only btn-default" href="javascript:;">
                                     <i className="fa fa-floppy-o"></i>

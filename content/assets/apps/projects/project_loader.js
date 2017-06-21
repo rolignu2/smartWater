@@ -222,6 +222,53 @@ var project_data =
 
             ga_request( request , data , result );
 
+        },
+
+        save_cloud : function (data, result  , params = {} ) {
+
+
+            /**
+             * {
+                    url         : $phurl ,
+                    war         : $war ,
+                    device      : this.state.device.particle_id,
+                    token       : this.state.device.token_id
+
+                }
+             * https://api.spark.io/v1/devices/{device_id}/{device_function}/?access_token={id_token}&args={params_args}
+             * VAR;{"n":"var0","p":"0","t":"A","f":"D","a":"f"}
+             * ***/
+
+            let k = {
+                n : data.name ,
+                p : data.pin ,
+                t : data.type,
+                f : data.format,
+                a : data.active == 1 ? 't' : 'f'
+            };
+
+            k = String(JSON.stringify(k));
+
+            let u  = params.url;
+            u = String(u)
+                .replace("{device_id}" , params.device )
+                .replace("{device_function}" , params.war )
+                .replace("{id_token}" , params.token )
+                .replace("{params_args}" , "VAR;" + k )
+
+
+            $.ajax({
+                url     : u,
+                method  : "GET",
+                type    : "GET",
+                timeout : 30*1000,
+                crossDomain : true
+            }).done(function (r) {
+                result(r);
+            }).fail(function (f) {
+                result(f);
+            });
+
         }
 
 

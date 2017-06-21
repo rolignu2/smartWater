@@ -140,13 +140,15 @@ class Variables extends CI_Model implements CoreInterface
         $variables          = $this->tools_devices->get_variables($id_device);
         $particle_url       = $this->tools_devices->get_particle_url();
         $photon_url         = $this->tools_devices->get_photon_url() ;
+        $war                = $this->tools_devices->get_war();
 
         return $this->load->view('variables/show' , [
 
             "dev"           =>  $device,
             "variables"     =>  $variables,
             "purl"          =>  $particle_url,
-            "phurl"         =>  $photon_url
+            "phurl"         =>  $photon_url,
+            "war"           =>  $war
 
         ] , TRUE );
 
