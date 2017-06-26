@@ -116,21 +116,35 @@ class Vars extends  React.Component{
             if(data[i].cod === id ){
 
                 $("#opt_" + id ).find("div[id='load_']").css({display : "block"});
-                this._hideVar(data);
-                var result = function ( r  ) {
 
+                this._hideVar(data);
+
+                //Resultado de la nube del photon , si el valor es = 1
+                //entonces se comunico de forma correcta a la nube
+                var result = function ( r  ) {
 
                     if(typeof  r === 'object'){
 
-                        if(typeof r.statusText !== 'undefined' && r.statusText === 'timeout'){
-                            alert("En estos momentos no podemos subir la variable.\n Verifique si el dispositivo esta encendido. ");
-                        }
-                        else{
-                            alert("Error desconocido :S");
-                        }
-                    }
-                    else {
+                        if(typeof r.statusText !== 'undefined' ){
 
+                            switch( r.statusText){
+
+                                case 'error':
+                                    alert("Existe un error al momento de subir la variable .\n " +  r.responseText );
+                                    break;
+                                case 'timeout':
+                                    alert("En estos momentos no podemos subir la variable.\n Verifique si el dispositivo esta encendido. ");
+                                    break;
+
+                            }
+
+                        }
+                        else if(typeof r.connected !== 'undefined' ){
+                            if(r.return_value == 1){
+                                $("#su_" + id ).find("i").removeClass("icon-cloud-upload").addClass("fa fa-cloud")
+                                $("#act_" + id ).find("i").removeClass("fa-cloud-upload").addClass("fa-check");
+                            }
+                        }
                     }
 
 
@@ -502,6 +516,7 @@ class Vars extends  React.Component{
              }) ;
 
 
+             //verifica si el dispositivo necesita una actualizada a la nube
              let varState = [] ;
              let system_state = {};
              if(typeof d.enabled !== 'undefined' && d.enabled == 0){
@@ -517,12 +532,14 @@ class Vars extends  React.Component{
                  system_state = { display : 'none' }
              }
 
+             //desactiva la subida a la nube si el dispositivo no esta listo o no esta conectado
              if(this.state.status == -1 || this.state.status == 0 ){
                  system_state = { display : 'none' }
              }
 
+             //analiza si esta habilitado
              let var_go ={}
-             if(typeof  d.enabled  !== 'undefined'){
+             if(typeof  d.enabled  !== 'undefined' && this.state.status == 1){
                  var_go = { display : "block" };
              }else {
                  var_go = {display : "none" }
@@ -604,7 +621,7 @@ class Vars extends  React.Component{
                                  </a>
                              </div>
 
-                             <div id={"del_" + c} style={var_go} id="upload_" class="margin-bottom-5">
+                             <div id={"del_" + c} style={var_go} id="delvar_" class="margin-bottom-5">
                                  <a id={"udel_" + c } href="javascript:void(0)" onClick={this.delete_variable} className=" filter-submit margin-bottom">
                                      <i className="fa fa-trash-o" aria-hidden="true"></i>
                                  </a>

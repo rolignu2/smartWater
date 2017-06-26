@@ -211,7 +211,7 @@ var project_data =
 
     variables : {
 
-        save : function (data , result , wait ) {
+        save            : function (data , result , wait ) {
 
             let  request  = {
                 dir : "variables",
@@ -224,7 +224,7 @@ var project_data =
 
         },
 
-        save_cloud : function (data, result  , params = {} ) {
+        save_cloud      : function (data, result  , params = {} ) {
 
 
             /**
@@ -244,7 +244,8 @@ var project_data =
                 p : data.pin ,
                 t : data.type,
                 f : data.format,
-                a : data.active == 1 ? 't' : 'f'
+                a : data.active == 1 ? 't' : 'f',
+                v : 0
             };
 
             k = String(JSON.stringify(k));
@@ -254,20 +255,41 @@ var project_data =
                 .replace("{device_id}" , params.device )
                 .replace("{device_function}" , params.war )
                 .replace("{id_token}" , params.token )
-                .replace("{params_args}" , "VAR;" + k )
+                .replace("{params_args}" , "" ) //al parecer particle actualizo a solo post
+                .replace("&args=" , ""); //se eliminara el args como parametro especifico
+
+
+            console.log("CONSOLE -> ENVIANDO PARAMETROS : " );
+            console.log("CONSOLE -> URL : " + u );
+            console.log("CONSOLE -> PARAMS : " + k);
 
 
             $.ajax({
                 url     : u,
-                method  : "GET",
-                type    : "GET",
+                type    : "POST",
                 timeout : 30*1000,
-                crossDomain : true
+                crossDomain : true,
+                data : {
+                    args : "VAR;" + k
+                }
             }).done(function (r) {
                 result(r);
             }).fail(function (f) {
+                console.log("CONSOLE -> ERROR EN COMUNICACION CON PARTICLE ");
                 result(f);
             });
+
+        },
+
+        remove_         : function(code , result  ){},
+
+        remove_cloud    : function(data , result , params = {}){
+
+             //elimina la informacion de la nube si y solo si ha sido eliminada del sistema
+            //si existe un error entonces se podria aplicar un rollback de las variables
+            //con el metodo sabe , se hara el rollback
+            // los pasos son primero eliminar del cloud , luego con el ok eliminar la variable del sistema
+
 
         }
 
