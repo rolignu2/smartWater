@@ -29,7 +29,10 @@ class View_scada extends CI_Model implements CoreInterface{
      */
     public function _render($params = NULL)
     {
-        // TODO: Implement _render() method.
+
+        return $this->load->view("scada/show_scada" , [
+            "url"  => site_url()
+        ] , true );
     }
 
     /**
@@ -79,6 +82,11 @@ class View_scada extends CI_Model implements CoreInterface{
     public function _css()
     {
         // TODO: Implement _css() method.
+        return print_css([
+            "/content/assets/apps/scada/codemirror/lib/codemirror.css",
+            "/content/assets/apps/scada/generic.css",
+            "/content/assets/global/plugins/jquery-ui/jquery-ui.min.js"
+        ]);
     }
 
     /**
@@ -115,14 +123,61 @@ class View_scada extends CI_Model implements CoreInterface{
     {
         // TODO: Implement _javascript() method.
 
+
         return [
 
             array(
                 "type"          => "text/javascript" ,
                 "location"      => "header" ,
-                "script"        => "https://code.jquery.com/ui/1.12.1/jquery-ui.js",
+                "script"        => site_url() . "content/assets/apps/scada/go.min.js" ,
+                "systemjs"      => false
+            ),
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "header" ,
+                "script"        => site_url() . "content/assets/apps/scada/core.js" ,
                 "systemjs"      => false
             )
+            ,
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "header" ,
+                "script"        => site_url() . "content/assets/apps/scada/GuideLines.js" ,
+                "systemjs"      => false
+            ),
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "header" ,
+                "script"        => site_url() . "content/assets/apps/scada/codemirror/lib/codemirror.js" ,
+                "systemjs"      => false
+            ),
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "header" ,
+                "script"        => site_url() . "content/assets/apps/scada/codemirror/mode/xml/xml.js" ,
+                "systemjs"      => false
+            ),
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "header" ,
+                "script"        => site_url() . "content/assets/apps/scada/codemirror/mode/javascript/javascript.js" ,
+                "systemjs"      => false
+            ),
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "header" ,
+                "script"        => site_url() . "content/assets/apps/scada/codemirror/mode/htmlmixed/htmlmixed.js" ,
+                "systemjs"      => false
+            )
+           ,
+           array(
+                "type"          => "text/javascript" ,
+                "location"      => "header" ,
+                "script"        => site_url() . "content/assets/global/plugins/jquery-ui/jquery-ui.min.js" ,
+                "systemjs"      => false
+            )
+
+
 
         ];
     }
@@ -148,6 +203,7 @@ class View_scada extends CI_Model implements CoreInterface{
     public function _title()
     {
         // TODO: Implement _title() method.
+        return "Sistema SCADA";
     }
 
     /**

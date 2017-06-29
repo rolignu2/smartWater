@@ -29,14 +29,14 @@
 
 
     <!-- garrobo oficial font -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
     <!-- system css -->
     <?php foreach($css_system as $css) : ?>
-        <link href="<?php echo $css; ?>" rel="stylesheet" id="<?php echo random_string(); ?>" type="text/css"/>
+        <link href="<?php echo $css; ?>" rel="stylesheet" id="<?= random_string();?>" type="text/css" />
     <?php endforeach; ?>
     <!-- if exist loader css -->
     <?php foreach ($css as $css): ?>
-        <link href="<?php echo $css; ?>" rel="stylesheet" id="<?php echo random_string(); ?>" type="text/css"/>
+        <link href="<?php echo $css; ?>" rel="stylesheet" id="<?= random_string(); ?>" type="text/css" />
     <?php endforeach; ?>
 
     <!-- app css -->
