@@ -51,12 +51,24 @@ class Tools_devices extends CI_Model implements Generic
             "get"           => "SELECT * FROM [table] g where g.id_device = ? " ,
             "get_code"      => "SELECT * FROM [table] g where g.code = ?"
 
+        ],
+
+        "scada" => [
+            "get"           => "SELECT g.id_scada,g.id_device,g.create_date,g.modify_date,g.name,gu.username
+                                FROM [table] g
+                                INNER JOIN [table_user] gu ON gu.id = g.id_user 
+                                WHERE g.id_device = ?",
+            "data"          => "SELECT g.data FROM [table] g
+                                WHERE g.id_device = ?"
         ]
     ];
 
     public function __construct()
     {
         parent::__construct();
+
+        //configuracion inicial de tools devices , aca se cargan todas la tablas de uso
+        //ademas se cargan las librerias y helpers
         $this->Load_();
     }
 
@@ -66,15 +78,18 @@ class Tools_devices extends CI_Model implements Generic
 
     public function Load_($objects = null)
     {
-        // TODO: Implement Load_() method.
+
         $this->load->database();
         $this->load->helper(["database"]);
         $this->load->library("meta");
+        $this->load->library("user");
         $this->tables = new stdClass();
         $this->tables->meta         = $this->db->dbprefix("metadata");
         $this->tables->apk          = $this->db->dbprefix("package");
         $this->tables->device       = $this->db->dbprefix("device");
         $this->tables->variables    = $this->db->dbprefix("variables");
+        $this->tables->scada        = $this->db->dbprefix("scada");
+        $this->tables->user        = $this->db->dbprefix("user");
         $this->url_particle         = $this->meta->get_meta_value("particle_url");
         $this->url_photon           = $this->meta->get_meta_value("particle_photon_get");
         $this->war_photon           = $this->meta->get_meta_value("war");
@@ -160,9 +175,9 @@ class Tools_devices extends CI_Model implements Generic
 
     }
 
-    public function  get_particle_url () { return $this->url_particle; }
+    public function get_particle_url () { return $this->url_particle; }
 
-    public function  get_photon_url() { return $this->url_photon; }
+    public function get_photon_url() { return $this->url_photon; }
 
     public function find_packages($name = null ) : string {
         if($name === null )
@@ -219,6 +234,105 @@ class Tools_devices extends CI_Model implements Generic
     }
 
 
+    public function get_scada_proyect($id_device = 0){
 
+        if($id_device === 0 ) return "{}";
+
+        $query  = set_database_query(
+            $this->tables->scada,
+            "[table]",
+            $this->querys["scada"]["get"]
+        );
+
+
+        $query  = set_database_query(
+            $this->tables->user,
+            "[table_user]",
+            $query
+        );
+
+        $result = $this->db->query($query , [$id_device])->result() ;
+
+        if( count($result) == 0 ) return "{}";
+        else return json_encode($result[0], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+    }
+
+    public function get_scada_data_proyect($id_device = 0 ){
+
+        if($id_device === 0 ) return "";
+
+        $query  = set_database_query(
+            $this->tables->scada,
+            "[table]",
+            $this->querys["scada"]["data"]
+        );
+
+        $result = $this->db->query($query , [$id_device])->result() ;
+
+        if( count($result) == 0 ) return "";
+        else return json_encode($result[0]);
+
+    }
+
+    public function add_scada_proyect($id_device = 0 , $data = null , $name = null , $id_scada = 0){
+
+        $err_message = json_encode([
+           "status"  => false ,
+            "msj"    => "Error al crear instancia en la base de datos o no exite dispositivo a anidar",
+            "id"     => 0
+        ]);
+
+        $good_message = json_encode([
+            "status" => true ,
+            "msj"    => "Cambios guardados con exito ",
+            "id"     => 0
+        ]);
+
+
+        if($id_device === 0 ) {
+            return  $err_message;
+        }
+
+
+        $current_date = new DateTime("now");
+
+
+        if($id_scada >= 1){
+            $this->db->where('id_scada' , $id_scada);
+
+            $this->db->update($this->table->scada , [
+                "data"              => $data,
+                "name"              => $name,
+                "modify_date"       => $current_date->format("Y-m-d h:M:s"),
+                "id_user"           => $this->user->get()->id()
+            ]);
+
+            $good_message["id"] = $id_scada;
+
+        }else{
+
+
+            $this->db->insert($this->tables->scada , [
+                "data"              => $data,
+                "name"              => $name,
+                "create_date"       => $current_date->format("Y-m-d h:M:s"),
+                "modify_date"       => $current_date->format("Y-m-d h:M:s"),
+                "id_device"         => $id_device,
+                "id_user"           => $this->user->get()->id()
+            ]);
+
+            $good_message = json_encode([
+                "status" => true ,
+                "msj"    => "Cambios guardados con exito ",
+                "id"     => $this->db->insert_id()
+            ]);
+
+
+        }
+
+
+        return $good_message;
+
+    }
 
 }

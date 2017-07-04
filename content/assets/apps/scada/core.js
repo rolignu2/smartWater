@@ -1267,7 +1267,9 @@ class ScadaTools extends ScadaError  {
 
     _load() {
         //funcion de carga secundaria despues del constructor
-        this.canvas.model = go.Model.fromJson(this.canvasData);
+        try {
+            this.canvas.model = go.Model.fromJson(this.canvasData);
+        }catch(e){}
         this.loadDiagramProperties();
     }
 
@@ -1340,6 +1342,8 @@ class Scada extends ScadaTools {
 
     constructor(){
         super();
+        this._addConfig;
+        this.canvasData     = null;
     }
 
 
@@ -1399,8 +1403,12 @@ class Scada extends ScadaTools {
 
         //evento click boton para guardar la data
         $($this.saveBtn).click(function(){
-            $this.modelData = $this.canvas.model.toJson()
-            console.log($this.modelData);
+            $this.modelData = $this.canvas.model.toJson();
+            let name        = $($this._addConfig.name).val();
+            let id          = $this._addConfig.id;
+            let device      = $this._addConfig.device;
+            let func        = $this._addConfig.func;
+             project_data.scada.save_scada($this.modelData , name , device , id , func);
         });
 
 
@@ -1479,8 +1487,12 @@ class Scada extends ScadaTools {
     }
 
 
-    addData(data ){
+    addData(data  ){
         this.canvasData = data;
+    }
+
+    addConfig( config){
+        this._addConfig = config;
     }
 
 

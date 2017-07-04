@@ -294,6 +294,29 @@ var project_data =
         }
 
 
+    },
+
+    scada : {
+
+        save_scada : function (data, name, id_device  , id_scada = 0  , result = function(){} ) {
+
+
+            let  request  = {
+                dir : "scada",
+                func : "save_scada" ,
+                model : "view_scada"
+            };
+
+            ga_request( request , {
+                data    : data,
+                name    : name,
+                device  : id_device,
+                scada   : id_scada
+
+            } , result);
+
+        }
+
     }
 
 };
