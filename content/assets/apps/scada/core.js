@@ -411,11 +411,17 @@ class ScadaTools extends ScadaError  {
 
     _documentChange($this = this){
 
+
         this.canvas.addDiagramListener("Modified", function(e) {
+
 
             /***
              cuando se modifica el canvas
              ****/
+
+            try{
+                $this._ModChange(e,$this);
+            }catch(k){}
 
             let button =	$(scada.saveBtn);
             var idx = document.title.indexOf("*");
@@ -437,139 +443,145 @@ class ScadaTools extends ScadaError  {
 
         this.canvas.addDiagramListener("ExternalObjectsDropped" , function(e ){
 
-            /***
-             Cuando se agrega un objeto externo al canvas
-
-             al momento de crear el objeto al canvas debe de considerarse
-             un par de cosas , por ejemplo el ID del objeto
-             ***/
-
-                //CANVAS
-            let c = $this.canvas;
-
-            //SKIPS
-            let o = c.skipsUndoManager;
-
-
-
-
-            /**SOLUCION PARA EL SISTEMA DE LINEAS DEL OBJETO **/
-            c.links.each(function(l){
-
-                if(l.part.data.sid == null || typeof l.part.data.sid == 'undefined' ){
-                    l.part.data.sid = $this._CreateOID(l.part.data.type); //CREAMOS UN ID EN LAS LINES
-                }
-
-                /* l.click = function(e,node){
-                 //console.log(node.part.data);
-                 //let i = $this._CreateOID(node.part.data.type);
-                 //$this._createModal($this._modalParams(node.part.data));
-                 };*/
-
-            });
-            /***FIN DE LA SOLUCION DE LINEAS DE CANVAS ***/
-
-
-            /***INICIO PARA LOS DEMAS NODOS ***/
-
-            c.nodes.each(function(l){
-
-                if(l.part.data.sid == null || typeof l.part.data.sid == 'undefined' ){
-                    l.part.data.sid = $this._CreateOID(l.part.data.type , l.part.data.category ); //CREAMOS UN ID EN LAS LINES
-                }
-
-
-                console.log(l.part.data );
-                //disparador de funciones si tienen
-                $.map(l.part.data.properties , (t)=>{
-
-
-                    if(t.name == 'function'){
-
-
-                        if(typeof t.value == 'function' ){
-                            //console.log("CONSOLE -> INICIANDO FUNCION ... ");
-                            t.value();
-                            t.backup = String(t.value);
-
-                        }
-                        else if(t.value == 'function'){
-                            console.log("Entrada a esta parte del codigo");
-                        }
-
-                    }
-
-                });
-
-
-                l.click = function(e,node){
-                    //console.log(node.part.data);
-                    //console.log(node.part.position);
-                    //console.log($("#scada-show").find("button"));
-
-                    //$("#scada-show").find("button").position.top = node.part.position.y;
-
-                    //let i = $this._CreateOID(node.part.data.type);
-                    //$this._createModal($this._modalParams(node.part.data));
-                };
-
-                l.contextClick = function(e, node ){
-                    $this._createModal($this._modalParams(node.part.data , node ));
-                };
-
-
-                //evento mouseover
-                l.mouseOver = function(e,node){
-
-
-                    $("#scada-show").css({
-                        left 		:  (node.part.position.x  + $("#frame").position().top ) ,
-                        top  		:  (node.part.position.y  -  $("#frame").height()) - 60 , //node.part.position.y - 25, //(node.part.position.y  -  $("#frame").height()) - 25 ,
-                        position 	: "relative",
-                        'z-index'   : '100000000',
-                        display 	: 'inline',
-                        opacity     : 0.75
-                    });
-
-
-                    //accion scada ver parametros
-                    $("#scada-show").find("a[id='scada-show-more']").click(function(){
-
-                        $this._createModal($this._modalParams(node.part.data , node ));
-
-                        $("#scada-show").css({
-                            display : 'none'
-                        });
-
-                    });
-
-                    //accion eliminar el objeto scada
-                    $("#scada-show").find("a[id='scada-delete-node']").click(function(){
-
-                        $this._deleteModal(node)
-
-                        $("#scada-show").css({
-                            display : 'none'
-                        });
-
-                    });
-
-                };
-
-
-                l.mouseLeave = function(e,node){
-                    /*$("#scada-show").css({
-                     display 	: 'none'
-                     });*/
-                }
-
-            });
 
             /**FINALIZACION NODAL **/
-
+            $this._ModChange(e,$this);
             //e.parameter.click = function(){ console.log("hello");}
             //console.log(c.skipsUndoManager);
         });
+
+    }
+
+    _ModChange (e , $this ){
+
+        /***
+         Cuando se agrega un objeto externo al canvas
+
+         al momento de crear el objeto al canvas debe de considerarse
+         un par de cosas , por ejemplo el ID del objeto
+         ***/
+
+            //CANVAS
+        let c = $this.canvas;
+
+        //SKIPS
+        let o = c.skipsUndoManager;
+
+
+
+
+        /**SOLUCION PARA EL SISTEMA DE LINEAS DEL OBJETO **/
+        c.links.each(function(l){
+
+            if(l.part.data.sid == null || typeof l.part.data.sid == 'undefined' ){
+                l.part.data.sid = $this._CreateOID(l.part.data.type); //CREAMOS UN ID EN LAS LINES
+            }
+
+            /* l.click = function(e,node){
+             //console.log(node.part.data);
+             //let i = $this._CreateOID(node.part.data.type);
+             //$this._createModal($this._modalParams(node.part.data));
+             };*/
+
+        });
+        /***FIN DE LA SOLUCION DE LINEAS DE CANVAS ***/
+
+
+        /***INICIO PARA LOS DEMAS NODOS ***/
+
+        c.nodes.each(function(l){
+
+            if(l.part.data.sid == null || typeof l.part.data.sid == 'undefined' ){
+                l.part.data.sid = $this._CreateOID(l.part.data.type , l.part.data.category ); //CREAMOS UN ID EN LAS LINES
+            }
+
+
+            console.log(l.part.data );
+            //disparador de funciones si tienen
+            $.map(l.part.data.properties , (t)=>{
+
+
+                if(t.name == 'function'){
+
+
+                    if(typeof t.value == 'function' ){
+                        //console.log("CONSOLE -> INICIANDO FUNCION ... ");
+                        t.value();
+                        t.backup = String(t.value);
+
+                    }
+                    else if(t.value == 'function'){
+                        console.log("Entrada a esta parte del codigo");
+                    }
+
+                }
+
+            });
+
+
+            l.click = function(e,node){
+                //console.log(node.part.data);
+                //console.log(node.part.position);
+                //console.log($("#scada-show").find("button"));
+
+                //$("#scada-show").find("button").position.top = node.part.position.y;
+
+                //let i = $this._CreateOID(node.part.data.type);
+                //$this._createModal($this._modalParams(node.part.data));
+            };
+
+            l.contextClick = function(e, node ){
+                $this._createModal($this._modalParams(node.part.data , node ));
+            };
+
+
+            //evento mouseover
+            l.mouseOver = function(e,node){
+
+
+                $("#scada-show").css({
+                    left 		:  (node.part.position.x  + $("#frame").position().top ) ,
+                    top  		:  (node.part.position.y  -  $("#frame").height()) - 60 , //node.part.position.y - 25, //(node.part.position.y  -  $("#frame").height()) - 25 ,
+                    position 	: "relative",
+                    'z-index'   : '100000000',
+                    display 	: 'inline',
+                    opacity     : 0.75
+                });
+
+
+                //accion scada ver parametros
+                $("#scada-show").find("a[id='scada-show-more']").click(function(){
+
+                    $this._createModal($this._modalParams(node.part.data , node ));
+
+                    $("#scada-show").css({
+                        display : 'none'
+                    });
+
+                });
+
+                //accion eliminar el objeto scada
+                $("#scada-show").find("a[id='scada-delete-node']").click(function(){
+
+                    $this._deleteModal(node)
+
+                    $("#scada-show").css({
+                        display : 'none'
+                    });
+
+                });
+
+            };
+
+
+            l.mouseLeave = function(e,node){
+                /*$("#scada-show").css({
+                 display 	: 'none'
+                 });*/
+            }
+
+        });
+
 
     }
 
@@ -1269,7 +1281,9 @@ class ScadaTools extends ScadaError  {
         //funcion de carga secundaria despues del constructor
         try {
             this.canvas.model = go.Model.fromJson(this.canvasData);
-        }catch(e){}
+        }catch(e){
+            console.log(e);
+        }
         this.loadDiagramProperties();
     }
 
@@ -1428,8 +1442,11 @@ class Scada extends ScadaTools {
                 if(String(d.sid) !== String(id))
                     return;
 
+                console.log(d);
+
                 d.keys 		= $("#obj_key").val();
                 d.name 		= $("#obj_name").val();
+
                 $this.canvas.model.setDataProperty(node.data, "text", $("#obj_text").val() );
 
                 $.map(d.properties , (a)=>{
@@ -1448,7 +1465,10 @@ class Scada extends ScadaTools {
                         case "function":
                             let f = $this.cm.getDoc().getValue();
                             a.value 	= eval( '(' + f + ')' );
-                            a.backup	= f;
+
+                            var regex   = new RegExp("\"", "g");
+                            var res     = String(f).replace(regex , "'");
+                            a.backup	= res;
                             //a.value();
                             break;
                         case "graph":

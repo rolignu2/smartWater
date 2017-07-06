@@ -6,8 +6,20 @@
     var conf        = null;
     var variables   = '<?= $variablesInfo ?>';
     var scadaInf    = '<?= $scadaInfo ?>';
-    var scadaData   =  <?= str_replace('\\"' , '"' , $scadaData) ?>';
+    var scadaData   =  '<?php
+            //if($data === null) echo "";
+            //else{
+                $data = str_replace('\n' , "" ,json_encode($scadaData , JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE  ));
+                $data = str_replace('\\"' , '"' , $data);
+                //$data = str_replace("'" , '"' , $data);
+                $data = str_replace('\t' , " " , $data);
+                $data = str_replace('\/' , '/' , $data);
+                echo $data ;
+            //}
+
+        ?>';
 </script>
+
 
 
 <style>
@@ -372,6 +384,9 @@
 
         init(){
 
+
+
+
             //instanciamos el scada
             scada = new Scada();
 
@@ -410,6 +425,8 @@
             });
 
 
+            //let s = JSON.stringify(scadaData);
+            //console.log(JSON.parse(scadaData));
             //si existe un scada a modificar o cargar
             if(scadaData != ''  )
                 scada.addData(scadaData);
@@ -469,12 +486,17 @@
                         { name : "description" , alias : "Descripcion" , value : "..." , control : "" , system : true },
                         { name : "function" , backup : ""  , alias : "Funcion" , value : function(){
 
+                            /**
+                             * En las cadenas favor no utilizar comillas dobles
+                             * ya que si se utilizan se remplazaran por comillas simples
+                             * **/
+
                             var $this = scada;
                             var it = 0 ;
 
                             /***
-                             este algoritmo es un ejemplo de como se podria llenar el
-                             tanque a base de calculos matematicos basicos
+                                este algoritmo es un ejemplo de como se podria llenar el
+                                tanque a base de calculos matematicos basicos
                              ****/
 
                             setInterval(function(){
@@ -495,30 +517,30 @@
                                     for(var i = 0 ; i < 19 ; i++ ){
 
                                         if(i < it){
-                                            build[String(i/20)] = "blue";
+                                            build[String(i/20)] = 'blue';
                                         }
-                                        else build[String(i/20)] = "white";
+                                        else build[String(i/20)] = 'white';
 
                                     }
                                     it++;
-                                    let fill  	= $this.$$(go.Brush, "Linear", build );
+                                    let fill  	= $this.$$(go.Brush, 'Linear', build );
                                     let percent	= Math.round((it/20) * 100) ;
 
 
                                     if(percent >= 60){
-                                        $this.canvas.model.setDataProperty(node.data, "stroke", "white" );
+                                        $this.canvas.model.setDataProperty(node.data, 'stroke', 'white' );
                                     }
                                     else {
-                                        $this.canvas.model.setDataProperty(node.data, "stroke", "black" );
+                                        $this.canvas.model.setDataProperty(node.data, 'stroke', 'black' );
                                     }
 
-                                    $this.canvas.model.setDataProperty(node.data, "text", "Tanque " +  percent + "%" );
-                                    $this.canvas.model.setDataProperty(node.data, "fill", fill);
+                                    $this.canvas.model.setDataProperty(node.data, 'text', 'Tanque ' +  percent + '%' );
+                                    $this.canvas.model.setDataProperty(node.data, 'fill', fill);
 
                                 });
 
 
-                                $this.canvas.commitTransaction("Iniciando modificacion ...");
+                                $this.canvas.commitTransaction('Iniciando modificacion ...');
 
 
                             } , 2000);
@@ -560,11 +582,11 @@
 
 
                                     //verificamos que el noso a generar sea sensor de flujo
-                                    if(node.part.data.keys  !== "_flowsensor") return ;
+                                    if(node.part.data.keys  !== '_flowsensor') return ;
 
 
                                     //buscamos el objeto de escala en cual generara
-                                    var scale = node.findObject("SCALE");
+                                    var scale = node.findObject('SCALE');
 
 
                                     //si la escala es nulla detener todo
@@ -583,12 +605,12 @@
                                     else v += (Math.random() < 0.5) ? -0.5 : 0.5;
 
                                     //enviamos el valor
-                                    $this.canvas.model.setDataProperty(node.data, "value", v);
+                                    $this.canvas.model.setDataProperty(node.data, 'value', v);
 
                                 });
 
                                 //hacemos commit a la transaccion :)
-                                $this.canvas.commitTransaction("Iniciando modificacion ...");
+                                $this.canvas.commitTransaction('Iniciando modificacion ..');
                             }, 5000/6);
 
 
@@ -632,11 +654,11 @@
 
 
                                     //verificamos que el noso a generar sea sensor de flujo
-                                    if(node.part.data.keys  !== "_manometer") return ;
+                                    if(node.part.data.keys  !== '_manometer') return ;
 
 
                                     //buscamos el objeto de escala en cual generara
-                                    var scale = node.findObject("SCALE");
+                                    var scale = node.findObject('SCALE');
 
 
                                     //si la escala es nulla detener todo
@@ -655,12 +677,12 @@
                                     else v += (Math.random() < 0.5) ? -0.5 : 0.5;
 
                                     //enviamos el valor
-                                    $this.canvas.model.setDataProperty(node.data, "value", v);
+                                    $this.canvas.model.setDataProperty(node.data, 'value', v);
 
                                 });
 
                                 //hacemos commit a la transaccion :)
-                                $this.canvas.commitTransaction("Iniciando modificacion ...");
+                                $this.canvas.commitTransaction('Iniciando modificacion ...');
                             }, 5000/6);
 
 
@@ -719,11 +741,11 @@
 
                                 $this.canvas.nodes.each(function(node) {
 
-                                    if(node.part.data.keys  !== "_photon_cloud") return ;
+                                    if(node.part.data.keys  !== '_photon_cloud') return ;
                                     $this.canvas.model.setDataProperty(node.data, "src", 'cloud-2' );
                                 });
 
-                                $this.canvas.commitTransaction("Iniciando modificacion ...");
+                                $this.canvas.commitTransaction('Iniciando modificacion ...');
 
                             };
 

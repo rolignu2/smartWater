@@ -270,7 +270,7 @@ class Tools_devices extends CI_Model implements Generic
         $result = $this->db->query($query , [$id_device])->result() ;
 
         if( count($result) == 0 ) return "";
-        else return json_encode($result[0]);
+        else return $result[0]->data;
 
     }
 
@@ -289,25 +289,31 @@ class Tools_devices extends CI_Model implements Generic
         ]);
 
 
+
         if($id_device === 0 ) {
             return  $err_message;
         }
+
 
 
         $current_date = new DateTime("now");
 
 
         if($id_scada >= 1){
-            $this->db->where('id_scada' , $id_scada);
 
-            $this->db->update($this->table->scada , [
+            $this->db->where('id_scada' , $id_scada);
+            $this->db->update($this->tables->scada , [
                 "data"              => $data,
                 "name"              => $name,
                 "modify_date"       => $current_date->format("Y-m-d h:M:s"),
                 "id_user"           => $this->user->get()->id()
             ]);
 
-            $good_message["id"] = $id_scada;
+            $good_message = json_encode([
+                "status" => true ,
+                "msj"    => "Cambios guardados con exito ",
+                "id"     => $id_scada
+            ]);
 
         }else{
 

@@ -72,7 +72,7 @@ class View_scada extends CI_Model implements CoreInterface{
             "deviceInfo"    => $deviceInfo,
             "variablesInfo" => $variablesInfo,
             "scadaInfo"     => $scadaInfo,
-            "scadaData"     => $scadaData
+            "scadaData"     => json_decode($scadaData)
         ] , true );
     }
 
