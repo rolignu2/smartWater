@@ -742,7 +742,7 @@
                                 $this.canvas.nodes.each(function(node) {
 
                                     if(node.part.data.keys  !== '_photon_cloud') return ;
-                                    $this.canvas.model.setDataProperty(node.data, "src", 'cloud-2' );
+                                    $this.canvas.model.setDataProperty(node.data, 'src', 'cloud-2' );
                                 });
 
                                 $this.canvas.commitTransaction('Iniciando modificacion ...');
