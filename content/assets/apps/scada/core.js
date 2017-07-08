@@ -505,13 +505,13 @@ class ScadaTools extends ScadaError  {
 
 
                     if(typeof t.value == 'function' ){
-                        //console.log("CONSOLE -> INICIANDO FUNCION ... ");
                         t.value();
                         t.backup = String(t.value);
-
                     }
-                    else if(t.value == 'function'){
-                        console.log("Entrada a esta parte del codigo");
+                    else if(typeof t.value == 'undefined'){
+                        t.backup = t.backup.replace(/_space_/g , '\n');
+                        t.value = eval("(" + t.backup + ")");
+                        t.value();
                     }
 
                 }

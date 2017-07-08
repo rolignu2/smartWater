@@ -9,7 +9,7 @@
     var scadaData   =  '<?php
             //if($data === null) echo "";
             //else{
-                $data = str_replace('\n' , "" ,json_encode($scadaData , JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE  ));
+                $data = str_replace('\n' ,'_space_',json_encode($scadaData , JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE  ));
                 $data = str_replace('\\"' , '"' , $data);
                 //$data = str_replace("'" , '"' , $data);
                 $data = str_replace('\t' , " " , $data);
@@ -380,6 +380,22 @@
             this.device         = null;
             this.variables      = null;
             this.scadaInf       = null;
+
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "showDuration": "1000",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+
         }
 
         init(){
@@ -437,6 +453,20 @@
                 name    : "#scada_name",
                 device  : this.device.id_device,
                 func    : function(b){
+                    //{"status":true,"msj":"Cambios guardados con exito ","id":"1"}
+                    try{
+                        let m = JSON.parse(b);
+                        switch (m.status){
+                            case true:
+                                toastr["success"](m.msj, "Cambios guardados ");
+                                break;
+                            case false:
+                                toastr["error"](m.msj, "Error :( ");
+                                break;
+                        }
+
+                    }catch (e){}
+
                     console.log(b);
                 }
             });
