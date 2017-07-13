@@ -274,6 +274,39 @@ class Tools_devices extends CI_Model implements Generic
 
     }
 
+
+    public function delete_scada_proyect($id_scada){
+
+        if(is_null($id_scada)){
+            return json_encode([
+                "status"        => FALSE,
+                "msj"           => "Hubo un error al momento de eliminar el proyecto.",
+                "id"            => $id_scada
+            ]);
+        }
+
+        $this->db->delete($this->tables->scada , [
+            "id_scada"  => $id_scada
+        ]);
+
+
+        if($this->db->affected_rows() >= 1){
+            return json_encode([
+                "status"        => TRUE ,
+                "msj"           => "Eliminado con exito ...",
+                "id"            => $id_scada
+            ]);
+        }
+
+
+        return json_encode([
+            "status"        => FALSE,
+            "msj"           => "No se pudo eliminar directo de la base de datos ... intente mas tarde ",
+            "id"            => $id_scada
+        ]);
+
+    }
+
     public function add_scada_proyect($id_device = 0 , $data = null , $name = null , $id_scada = 0){
 
         $err_message = json_encode([

@@ -17,7 +17,7 @@ class View_scada extends CI_Model implements CoreInterface{
     }
 
 
-    public function save_scada(){
+    public function save_scada() : string {
 
         $params = (object) $this->input->post() ?? null ;
 
@@ -29,6 +29,13 @@ class View_scada extends CI_Model implements CoreInterface{
         return $this->tools_devices
                     ->add_scada_proyect($id_device,$data,$name,$id_scada);
 
+    }
+
+
+    public function delete_scada() : string {
+
+        $id_scada = (object) $this->input->post() ?? null ;
+        return $this->tools_devices->delete_scada_proyect($id_scada->id ?? null );
     }
 
     /**

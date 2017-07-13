@@ -315,6 +315,19 @@ var project_data =
 
             } , result);
 
+        },
+        
+        
+        delete_scada : function ( id_scada , result = function(){} ) {
+
+            let  request  = {
+                dir : "scada",
+                func : "delete_scada" ,
+                model : "view_scada"
+            };
+
+            ga_request( request , { id : id_scada } , result);
+
         }
 
     }

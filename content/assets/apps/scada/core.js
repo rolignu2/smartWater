@@ -496,7 +496,7 @@ class ScadaTools extends ScadaError  {
             }
 
 
-            console.log(l.part.data );
+            //console.log(l.part.data );
             //disparador de funciones si tienen
             $.map(l.part.data.properties , (t)=>{
 
@@ -957,7 +957,7 @@ class ScadaTools extends ScadaError  {
                     }
                     catch(k){
                         console.log("ERROR -> K PIPELOOP ");
-                        console.log(k);
+                       // console.log(k);
                     }
                 }
                 else {
@@ -1358,6 +1358,7 @@ class Scada extends ScadaTools {
         super();
         this._addConfig;
         this.canvasData     = null;
+        this.queue          = [];
     }
 
 
@@ -1442,7 +1443,7 @@ class Scada extends ScadaTools {
                 if(String(d.sid) !== String(id))
                     return;
 
-                console.log(d);
+               // console.log(d);
 
                 d.keys 		= $("#obj_key").val();
                 d.name 		= $("#obj_name").val();
@@ -1519,6 +1520,50 @@ class Scada extends ScadaTools {
     setControls (controls = null , controls2 = null ) {
         this.controlData 		= controls;
         this.controlData2 		= controls2;
+    }
+
+
+    StartTrans($threatName , $this = this  ){
+
+        if(!this.IsTran($threatName)){
+           return false;
+        }
+
+        this.queue.unshift($threatName);
+        $this.canvas.startTransaction();
+
+        return true ;
+
+    }
+
+    CommitTrans($Tname , $this = this ){
+
+        if(this.IsTran($Tname , $this , 'del')){
+           return true ;
+        }
+
+        return false;
+    }
+
+    IsTran (t , $this = this  ,  d = ''){
+
+        if(this.queue.length == 0){
+            return true;
+        }
+
+        for(let i in this.queue){
+            if(t === this.queue[i]){
+
+                if(d !== '' && d== 'del'){
+                    return $this.canvas.commitTransaction(this.queue.pop());
+                }
+
+                return true ;
+            }
+        }
+
+        return false;
+
     }
 
 

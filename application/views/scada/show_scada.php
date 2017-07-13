@@ -7,66 +7,14 @@
     var variables   = '<?= $variablesInfo ?>';
     var scadaInf    = '<?= $scadaInfo ?>';
     var scadaData   =  '<?php
-            //if($data === null) echo "";
-            //else{
                 $data = str_replace('\n' ,'_space_',json_encode($scadaData , JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE  ));
                 $data = str_replace('\\"' , '"' , $data);
                 //$data = str_replace("'" , '"' , $data);
                 $data = str_replace('\t' , " " , $data);
                 $data = str_replace('\/' , '/' , $data);
                 echo $data ;
-            //}
-
         ?>';
 </script>
-
-
-
-<style>
-
-    .portlet.light {
-        padding: 2px 2px 2px 2px;
-        background-color: #fff;
-    }
-
-    .portlet > .portlet-title > .caption {
-        float: left;
-        display: inline-block;
-        font-size: 18px;
-        line-height: 20px;
-        padding: 10px 0;
-    }
-
-    .portlet.light > .portlet-title > .caption > .caption-subject {
-        font-size: 12px;
-        margin-left: 25px;
-    }
-
-    .theMargin {
-        margin-bottom: 10px !important;
-    }
-
-    .toolsDrag{
-        width: 19% !important;
-        background: white;
-        min-height: 100px;
-        height: 100px;
-        position: fixed;
-        margin-left: 5px;
-        left: 0px;
-        top: 100px;
-        -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-        cursor: auto;
-        z-index: 1000;
-        border: 4px solid black;
-        opacity: 0.75;
-    }
-
-    .objview{
-        position: relative;
-    }
-
-</style>
 
 
 
@@ -81,6 +29,10 @@
 
 <div id="overview" class="toolsDrag" style="margin-top:10% ;width: 100%; height:200px;"></div>
 <div  id="controls-pipes" class="toolsDrag" style="  "></div>
+<div  id="controls-data" class="toolsDrag2 " style="">
+    <div class="alert alert-info cdata">Seleccione un control </div>
+</div>
+
 <input type="hidden" id="scada-id" value="0" />
 
 <div class="row">
@@ -106,7 +58,6 @@
                                 </div>
                             </span>
                             <small id="scada_save_label" >
-                                <span id="elabel">(No Guardado ...)</span>
                                 <span id="efunctions">
                                     <div  class="objview">
                                         <a id="tools-ancl" class="ancl-info" href="javascript:void(0);" >
@@ -122,7 +73,7 @@
                             <span>Guardar Cambios </span>
                         </a>
                         <div class="nav-divider"></div>
-                        <a class="btn red btn-outline theMargin" href="" >
+                        <a href="javascript:void(0);" onclick="$('#scada-modal-delete-project').modal({'backdrop': false });" class="btn red btn-outline theMargin" href="" >
                             <i class="fa fa-floppy-o" aria-hidden="true"></i>
                             <span>Eliminar Scada &nbsp;&nbsp;&nbsp;&nbsp;</span>
                         </a>
@@ -143,9 +94,6 @@
                                 min-height:800px;
                                 background-color:white">
                 </div>
-
-
-
 
             </div>
         </div>
@@ -170,6 +118,9 @@
         </i>
     </a>
 </div>
+
+
+
 
 
 <!-- MODAL DE PROPIEDADES DEL OBJETO -->
@@ -333,6 +284,9 @@
     </div>
 </div>
 
+
+
+
 <!-- MODAL DE ELIMINACION DEL OBJETO -->
 <div id="scada-modal-delete" class="modal fade" role="dialog">
     <div class="modal-dialog modal-sm">
@@ -346,6 +300,30 @@
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn">Cancelar</button>
                 <button id="delete-action-scada" type="button" data-dismiss="modal" class="btn btn-primary">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL DE ELIMINACION DEL SCADA  -->
+<div id="scada-modal-delete-project" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Eliminar SCADA </h4>
+            </div>
+            <div class="modal-body">
+                <center>
+                <p>¿Seguro que desea eliminar completamente el proyecto ?</p>
+                <p>Nota : <b>si se elimina no se podra recuperar.</b></p>
+                    <p id="del-load-scada">
+                    </p>
+                </center>
+            </div>
+            <div class="modal-footer">
+                <button id="delete-cancel-scada-project" type="button" data-dismiss="modal" class="btn">Cancelar</button>
+                <button  id="delete-action-scada-project" type="button"  class="btn btn-primary">Eliminar</button>
             </div>
         </div>
     </div>
@@ -403,26 +381,31 @@
 
 
 
-            //instanciamos el scada
-            scada = new Scada();
+            try {
+                //instanciamos el scada
+                scada = new Scada();
 
 
-            //creamos un objeto del dispositivo obtenido
-            try{
-                this.device         = JSON.parse(device);
-                this.variables      = JSON.parse(variables);
-                this.scadaInf       = JSON.parse(scadaInf);
+                //creamos un objeto del dispositivo obtenido
+                try {
+                    this.device = JSON.parse(device);
+                    this.variables = JSON.parse(variables);
+                    this.scadaInf = JSON.parse(scadaInf);
+                } catch (e) {
+                    console.log("ERROR-> NO SE ENCUENTRA EL DISPOSITIVO ");
+                    console.log(e);
+                }
+
+                //llamada a funciones de instancia
+                this.paramsIntance();
+
+
+                //llamada de querys de instancia
+                this.queryInit();
             }catch (e){
-                console.log("ERROR-> NO SE ENCUENTRA EL DISPOSITIVO ");
                 console.log(e);
+                toastr["error"]("Error al momento de cargar la interfaz de SCADA \n Favor reflescar denuevo o control F5 ", "Error :( ");
             }
-
-            //llamada a funciones de instancia
-            this.paramsIntance();
-
-
-            //llamada de querys de instancia
-            this.queryInit();
 
         }
 
@@ -467,7 +450,7 @@
 
                     }catch (e){}
 
-                    console.log(b);
+                   // console.log(b);
                 }
             });
 
@@ -514,24 +497,27 @@
                         { name : "personalize" 	, value : { max : 0, min : 0, percent:0 ,  type : "tank" } , func : null , control : "input" , system : false  },
                         { name : "restrict" 	, alias : "Restricciones" , value :  [] , control : "input" , system : false },
                         { name : "description" , alias : "Descripcion" , value : "..." , control : "" , system : true },
-                        { name : "function" , backup : ""  , alias : "Funcion" , value : function(){
+                        { name : "function" , backup : ""  , alias : "Funcion" , value : function (){
 
                             /**
                              * En las cadenas favor no utilizar comillas dobles
                              * ya que si se utilizan se remplazaran por comillas simples
                              * **/
 
+                            /**
+                             *  este algoritmo es un ejemplo de como se podria llenar el
+                                tanque a base de calculos matematicos basicos
+                             */
+
                             var $this = scada;
                             var it = 0 ;
+                            var TransName = 'Mytank' + String(Math.random());
 
-                            /***
-                                este algoritmo es un ejemplo de como se podria llenar el
-                                tanque a base de calculos matematicos basicos
-                             ****/
+
 
                             setInterval(function(){
 
-                                $this.canvas.startTransaction();
+                                $this.StartTrans(TransName , $this );
 
                                 $this.canvas.nodes.each(function(node){
 
@@ -553,8 +539,8 @@
 
                                     }
                                     it++;
-                                    let fill  	= $this.$$(go.Brush, 'Linear', build );
-                                    let percent	= Math.round((it/20) * 100) ;
+                                    let fill   = $this.$$(go.Brush, 'Linear', build );
+                                    let percent = Math.round((it/20) * 100) ;
 
 
                                     if(percent >= 60){
@@ -570,7 +556,9 @@
                                 });
 
 
-                                $this.canvas.commitTransaction('Iniciando modificacion ...');
+                                $this.CommitTrans(TransName , $this);
+
+
 
 
                             } , 2000);
@@ -601,11 +589,26 @@
                         { name : "description" , alias : "Descripcion" , value : "..." , control : "" , system : true },
                         { name : "function" , backup : ""  , alias : "Funcion" , value : function(){
 
+                            /**
+                             * En las cadenas favor no utilizar comillas dobles
+                             * ya que si se utilizan se remplazaran por comillas simples
+                             * **/
+
+                            /**
+                             *  este algoritmo es un ejemplo de como se podria llenar el
+                             tanque a base de calculos matematicos basicos
+                             */
+
+
                             var $this = scada;
+                            var TransName = 'MyFlow' + String(Math.random());
+
+
                             setInterval(function() {
 
 
-                                $this.canvas.startTransaction();  	// aplicamos la transferencia al canvas
+                                //Funcion scada para transferir informacion al canvas
+                                $this.StartTrans(TransName , $this );
 
                                 //analizamos los nodos
                                 $this.canvas.nodes.each(function(node) {
@@ -639,8 +642,8 @@
 
                                 });
 
-                                //hacemos commit a la transaccion :)
-                                $this.canvas.commitTransaction('Iniciando modificacion ..');
+                                //enviar commit a los datos actualizados
+                                $this.CommitTrans(TransName , $this);
                             }, 5000/6);
 
 
@@ -673,11 +676,26 @@
                         { name : "description"  , alias : "Descripcion" , value : "..." , control : "" , system : true },
                         { name : "function" , backup : "" , alias : "Funcion" , value : function(){
 
+                            /**
+                             * En las cadenas favor no utilizar comillas dobles
+                             * ya que si se utilizan se remplazaran por comillas simples
+                             * **/
+
+                            /**
+                             *  este algoritmo es un ejemplo de como se podria llenar el
+                             tanque a base de calculos matematicos basicos
+                             */
+
+
                             var $this = scada;
+                            var TransName = 'Mymano' + String(Math.random());
+
+
                             setInterval(function() {
 
 
-                                $this.canvas.startTransaction();  	// aplicamos la transferencia al canvas
+                                //Funcion scada para transferir informacion al canvas
+                                $this.StartTrans(TransName , $this );
 
                                 //analizamos los nodos
                                 $this.canvas.nodes.each(function(node) {
@@ -711,8 +729,9 @@
 
                                 });
 
-                                //hacemos commit a la transaccion :)
-                                $this.canvas.commitTransaction('Iniciando modificacion ...');
+                                //enviar commit a los datos actualizados
+                                $this.CommitTrans(TransName , $this);
+
                             }, 5000/6);
 
 
@@ -839,6 +858,7 @@
         queryInit(){
 
 
+
             //querys js en cual se llena la informacion correspondiente
             $("#obj_active").bootstrapSwitch();
             $("#proyect_title").html(this.device.name);
@@ -846,11 +866,47 @@
             //informacion del scada por medio de su entrada
             $("#proyect_subtitle").html( "id(" +  this.device.particle_id + ")");
             $("#scada_name").val(this.scadaInf.name != 'undefined' ? this.scadaInf.name : '');
+            $("#scada-id").val(this.scadaInf.id_scada);
 
 
             //llenamos con las variables del proyecto
             $.map(this.variables , function (b) {
                 $("#obj_var").append("<option value='" + b.id_variable + "'>"+ b.name + "</option>")
+            });
+
+
+            $("#delete-action-scada-project").click(function () {
+
+                let l = $("#del-load-scada");
+                let p = $("#delete-cancel-scada-project");
+
+                p.css({display : 'none'});
+                $(this).css({display: 'none'});
+                l.html("<img width='200px' height='150px' src='" + $("#ga_url").val() +"content/system/files/img/scada-loading.gif' /><p id='delete-mess'><b>ELIMINANDO...</b></p>")
+
+                project_data.scada.delete_scada($("#scada-id").val(), function (result) {
+
+                    if(typeof result === 'string')
+                        result = JSON.parse(result);
+
+                    $("#delete-mess").html("<b>" + result.msj + "</b> <p>Recargando Espere...</p>" );
+                    switch (result.status){
+                        case true:
+                            let o = function () {
+                                window.location.href = $("#ga_url").val();
+                            };
+                            window.setTimeout(o , 3500);
+                            break;
+                        case false:
+                            let p = function () {
+                                window.location.reload();
+                            };
+                            window.setTimeout(p , 4000);
+                            break;
+                    }
+
+                });
+
             });
 
 
@@ -861,6 +917,7 @@
                     try{
                         $("#controls-pipes").draggable();
                         $("#overview").draggable();
+                        $("#controls-data").draggable();
                     }catch (e){
                         console.log(e);
                         k();
@@ -872,9 +929,9 @@
             //llamada de k
             k();
 
-            console.log(this.device);
-            console.log(this.variables);
-            console.log(this.scadaInf);
+            //console.log(this.device);
+            //console.log(this.variables);
+            //console.log(this.scadaInf);
 
         }
 
