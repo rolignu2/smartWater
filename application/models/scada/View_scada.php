@@ -71,7 +71,9 @@ class View_scada extends CI_Model implements CoreInterface{
             $variablesInfo      = $this->tools_devices->get_variables($device);
             $scadaInfo          = $this->tools_devices->get_scada_proyect($device);
             $scadaData          = $this->tools_devices->get_scada_data_proyect($device);
+            $scadaWS            = $this->tools_devices->get_scada_data($device);
         }
+
 
 
         return $this->load->view("scada/show_scada" , [
@@ -79,7 +81,8 @@ class View_scada extends CI_Model implements CoreInterface{
             "deviceInfo"    => $deviceInfo,
             "variablesInfo" => $variablesInfo,
             "scadaInfo"     => $scadaInfo,
-            "scadaData"     => json_decode($scadaData)
+            "scadaData"     => json_decode($scadaData),
+            "scadaws"       => ""
         ] , true );
     }
 

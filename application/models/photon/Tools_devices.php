@@ -13,6 +13,8 @@ class Tools_devices extends CI_Model implements Generic
 
     protected $war_photon               = null ;
 
+    protected $scada_off_conf           = null ;
+
     protected $querys = [
 
 
@@ -60,6 +62,7 @@ class Tools_devices extends CI_Model implements Generic
                                 WHERE g.id_device = ?",
             "data"          => "SELECT g.data FROM [table] g
                                 WHERE g.id_device = ?"
+
         ]
     ];
 
@@ -89,11 +92,13 @@ class Tools_devices extends CI_Model implements Generic
         $this->tables->device       = $this->db->dbprefix("device");
         $this->tables->variables    = $this->db->dbprefix("variables");
         $this->tables->scada        = $this->db->dbprefix("scada");
-        $this->tables->user        = $this->db->dbprefix("user");
+        $this->tables->user         = $this->db->dbprefix("user");
+        $this->tables->data         = $this->db->dbprefix("data");
+        $this->tables->data_his     = $this->db->dbprefix("data_his");
         $this->url_particle         = $this->meta->get_meta_value("particle_url");
         $this->url_photon           = $this->meta->get_meta_value("particle_photon_get");
         $this->war_photon           = $this->meta->get_meta_value("war");
-
+        $this->scada_off_conf       = $this->meta->get_meta_value("scada_config");
 
     }
 
@@ -233,7 +238,6 @@ class Tools_devices extends CI_Model implements Generic
         $this->db->trans_complete();
     }
 
-
     public function get_scada_proyect($id_device = 0){
 
         if($id_device === 0 ) return "{}";
@@ -273,7 +277,6 @@ class Tools_devices extends CI_Model implements Generic
         else return $result[0]->data;
 
     }
-
 
     public function delete_scada_proyect($id_scada){
 
@@ -371,6 +374,49 @@ class Tools_devices extends CI_Model implements Generic
 
 
         return $good_message;
+
+    }
+
+    public function get_scada_off_config(){
+        return json_decode($this->scada_off_conf) ?? json_decode([]);
+    }
+
+    public function get_scada_data( $id_device = 0 ){
+
+        $scada_conf = $this->get_scada_off_config();
+
+
+        $this->db
+                    ->select('gd.*')
+                    ->from($this->tables->data .  ' as gd')
+                    ->join($this->tables->device . " as gds" , "gds.particle_id = gd.device_id" , "inner")
+                    ->where("gds.id_device" ,$id_device);
+
+
+        if(!$scada_conf->date->all){
+            $this->db->where("gd.date between" , $scada_conf->date->before );
+            if($scada_conf->date->after == "" || $scada_conf->date->after == "now()"){
+                $this->db->where("gd.date" , "now()");
+            }else{
+                $this->db->where("gd.date" , $scada_conf->date->after );
+            }
+        }
+
+        if($scada_conf->his){
+           $compiled_       =  $this->db->get_compiled_select();
+           $compiled_his    =  str_replace( $this->tables->data ,
+                                            $this->tables->data_his ,
+                                            $compiled_);
+
+           $all_compiled =  $compiled_ . " UNION ALL (" . $compiled_his  . " )";
+
+           return $this->db->query($all_compiled)->result();
+
+        }
+        else{
+            return $this->db->get()->result();
+        }
+
 
     }
 

@@ -14,6 +14,21 @@
                 $data = str_replace('\/' , '/' , $data);
                 echo $data ;
         ?>';
+
+    var scadaws = '<?= $scadaws; ?>';
+
+    let a = {
+        var0 : "hola",
+        var1 : "salu"
+    }
+
+
+    for (var i in a) {
+        eval("var " + i + " = '" + a[i] + "'");
+    }
+
+    console.log(var0);
+    console.log(var1);
 </script>
 
 
@@ -29,9 +44,9 @@
 
 <div id="overview" class="toolsDrag" style="margin-top:10% ;width: 100%; height:200px;"></div>
 <div  id="controls-pipes" class="toolsDrag" style="  "></div>
-<div  id="controls-data" class="toolsDrag2 " style="">
-    <div class="alert alert-info cdata">Seleccione un control </div>
-</div>
+<!--<div  id="controls-data" class="toolsDrag2 " style="">
+    <div style="display: none;" class="alert alert-info cdata">Seleccione un control </div>
+</div>-->
 
 <input type="hidden" id="scada-id" value="0" />
 
@@ -871,7 +886,7 @@
 
             //llenamos con las variables del proyecto
             $.map(this.variables , function (b) {
-                $("#obj_var").append("<option value='" + b.id_variable + "'>"+ b.name + "</option>")
+                $("#obj_var").append("<option value='" + b.id_variables + "'>"+ b.name + "</option>")
             });
 
 

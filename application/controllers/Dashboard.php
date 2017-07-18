@@ -1066,39 +1066,25 @@ class Dashboard extends CI_Controller {
      * * */
     public function test() {
 
-       //$this->load->model("system_core");
-      //  echo $this->system_core->get_langs();
-
-        //https://www.pagadito.com/auxcall/gen.php?ahac=suscriptores&email=rolo@gmail.com
-
-       // $this->load->library("curl");
-
-        //echo phpinfo();
-
-       /* $this->load->library("messages");
+       $this->load->model("photon/tools_devices");
+       $scadaWs = $this->tools_devices->get_scada_data(3);
 
 
-        $this->messages
-                ->emailFrom()
-                ->email_subject("prueba nada mas ")
-                ->email_to("rolando.arriaza.m@gmail.com")
-                ->email_body("prueba de correo ")
-                ->email_send();
+       $variables = array();
 
-        $this->messages->debugger();*/
-
-       //$this->load->library("devicemeta" );
-       //$p = $this->devicemeta->get_variables(2);
+       foreach ($scadaWs as $d){
+           $data    = json_decode($d->data);
+           $date    = new DateTime($d->date);
+           //print_r($d->data);
+           //print_r($data);
+           //$date->format("Y-m-d")
+       }
 
 
-       //echo "<pre>";
-       
-       //phpinfo();
-       //print_r($p);
+        echo "<pre>" ;
+        print_r($variables);
+        print_r($scadaWs);
 
-       print_r($this->user->get_other_user(1)->get_all_name());
-       
-       // send_email("" , "rolando.arriaza.m@gmail.com" , "prueba");
     }
 
     /**

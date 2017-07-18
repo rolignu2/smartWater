@@ -18,8 +18,6 @@ class Webservices extends CI_Controller
         $this->load->library(["meta" , "operator"]);
         $this->key = $this->meta->get_meta_value("api_key");
         $this->load->model("services/services" );
-
-
     }
 
 
@@ -42,7 +40,11 @@ class Webservices extends CI_Controller
         $key        = $this->input->get("key") ?? null ;
 
         //data obtenida
-        $data       = $this->input->get("data") ?? null ;
+        $data       = htmlspecialchars_decode($this->input->get("data")) ?? null ;
+
+        if(!is_null($data)){
+            $data = str_replace(",]", "]", $data);
+        }
 
         //id core del photon
         $core       = $this->input->get("coreid") ?? null;
@@ -52,7 +54,7 @@ class Webservices extends CI_Controller
 
         // fecha de publicacion
         $date       = new DateTime("now");
-        $date_at    = $date->format("y-M-d h:m:s");
+        $date_at    = $date->format("Y-m-d H:i:s");
 
 
         //web services verificamos la llave maestra
@@ -103,12 +105,6 @@ class Webservices extends CI_Controller
 
 
         return ;
-
-    }
-
-
-    public function logs(){
-
 
     }
 

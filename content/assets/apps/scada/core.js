@@ -608,6 +608,7 @@ class ScadaTools extends ScadaError  {
 
     _createModal( $params = null ){
 
+
         //creamos el modal con los parametros necesarios
 
         let p = "#obj_";
@@ -685,6 +686,19 @@ class ScadaTools extends ScadaError  {
         });
 
         $(p + "restrict").val(r.join(","));
+
+
+
+        //seleccionamos la variable
+        $.map($params.props, (b)=>{
+            if(String(b.name) === "variable"){
+                $("#obj_var option").each(function () {
+                    if($(this).val() == b.value ){
+                        $(this).prop("selected" , true);
+                    }
+                })
+            }
+        });
 
 
         //otras propiedades
@@ -869,7 +883,6 @@ class ScadaTools extends ScadaError  {
     }
 
 
-
     _PipeLoop(diagram , $this ){
 
         try{
@@ -956,7 +969,7 @@ class ScadaTools extends ScadaError  {
                         shape.strokeDashOffset = (off <= 0) ? 20 : off;
                     }
                     catch(k){
-                        console.log("ERROR -> K PIPELOOP ");
+                       // console.log("ERROR -> K PIPELOOP ");
                        // console.log(k);
                     }
                 }
