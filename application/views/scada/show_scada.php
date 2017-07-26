@@ -15,20 +15,15 @@
                 echo $data ;
         ?>';
 
-    var scadaws = '<?= $scadaws; ?>';
 
-    let a = {
-        var0 : "hola",
-        var1 : "salu"
+    var scadaws = JSON.parse('<?= $scadaws; ?>');
+
+
+    for (var i in scadaws) {
+        eval("var " + i + " = '" + JSON.stringify(scadaws[i]) + "'");
     }
 
 
-    for (var i in a) {
-        eval("var " + i + " = '" + a[i] + "'");
-    }
-
-    console.log(var0);
-    console.log(var1);
 </script>
 
 
@@ -40,13 +35,29 @@
     </small>
 </h3>
 
+<style>
 
+    .select2-results__options{
+        padding: 20px !important;
+    }
+
+</style>
 
 <div id="overview" class="toolsDrag" style="margin-top:10% ;width: 100%; height:200px;"></div>
 <div  id="controls-pipes" class="toolsDrag" style="  "></div>
-<!--<div  id="controls-data" class="toolsDrag2 " style="">
-    <div style="display: none;" class="alert alert-info cdata">Seleccione un control </div>
-</div>-->
+<div  id="controls-data" class="toolsDrag2 " style="">
+    <!--<div style="display: none;" class="alert alert-info cdata">Seleccione un control </div>-->
+    <div style="margin-left: -3%;margin-right: 2%;" class="row">
+        <div  class="col-md-12 col-sm-12">
+            <h5><b>Fechas de datos :</b></h5>
+            <div class="input-group select2-bootstrap-append">
+                <select id="control-dates" class="form-control select2-allow-clear">
+                    <option></option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
 
 <input type="hidden" id="scada-id" value="0" />
 
@@ -75,7 +86,7 @@
                             <small id="scada_save_label" >
                                 <span id="efunctions">
                                     <div  class="objview">
-                                        <a id="tools-ancl" class="ancl-info" href="javascript:void(0);" >
+                                        <a id=""  onclick="$('#scada-help').modal()" class="ancl-info" href="javascript:void(0);" >
                                             <i class="fa fa-info-circle" aria-hidden="true"></i>
                                         </a>
                                     </div>
@@ -133,6 +144,8 @@
         </i>
     </a>
 </div>
+
+
 
 
 
@@ -346,8 +359,61 @@
 
 
 
+<!-- MODAL INFORMACION SCADA  -->
+<div id="scada-help" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Informacion Scada</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab"  href="#_ax">
+                            <i class="fa fa-certificate" aria-hidden="true"></i>
+                            General
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab"  href="#_ay">
+                            <i class="fa fa-code" aria-hidden="true"></i>
+                            Variables Reservadas
+                        </a>
+                    </li>
+                </ul>
+
+
+                <div class="tab-content">
+
+
+                    <div id="_ax" class="tab-pane fade in active">
+
+                        <form style="margin-top:20px;" class="form-horizontal">
+
+                        </form>
+
+
+                    </div>
+                    <div id="_ay" class="tab-pane fade">
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button  button type="button" data-dismiss="modal" class="btn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
 
+    var ControlDate = $("#control-dates");
 
     $(window).ready(function(){
             init_scada();
@@ -890,6 +956,8 @@
             });
 
 
+
+
             $("#delete-action-scada-project").click(function () {
 
                 let l = $("#del-load-scada");
@@ -922,6 +990,38 @@
 
                 });
 
+            });
+
+
+            //analizamos las fechas para ver si control-dates se habilitara segun algoritmo
+
+            var select_data = [];
+            if(typeof  scadaws !== 'undefined'){
+                if(typeof scadaws == 'object' ){
+                    let z = Object.keys(scadaws);
+                    let a = z[0];
+                    let u = scadaws[a].values;
+                    for(let j in u ) {
+                        select_data.push({
+                            id : j ,
+                            text : j
+                        });
+                    }
+                }
+                else {
+                    ControlDate.prop("disabled" , true);
+                }
+            }
+
+
+
+            $.fn.select2.defaults.set("theme", "bootstrap");
+
+            ControlDate.select2({
+                allowClear: !0,
+                placeholder: 'Filtra por fechas',
+                width: null,
+                data : select_data
             });
 
 

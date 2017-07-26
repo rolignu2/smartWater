@@ -14,6 +14,8 @@ class View_scada extends CI_Model implements CoreInterface{
         $this->load->model("photon/tools_devices" );
         //obtenemos la instancia de la base de datos
         $this->load->database();
+        //model en cual se llama las funciones de data en las variables
+        $this->load->model("variables/vartools");
     }
 
 
@@ -71,18 +73,18 @@ class View_scada extends CI_Model implements CoreInterface{
             $variablesInfo      = $this->tools_devices->get_variables($device);
             $scadaInfo          = $this->tools_devices->get_scada_proyect($device);
             $scadaData          = $this->tools_devices->get_scada_data_proyect($device);
-            $scadaWS            = $this->tools_devices->get_scada_data($device);
+            $scadaWS            = $this->vartools->Get_ScadaWsData($device);
         }
 
 
 
         return $this->load->view("scada/show_scada" , [
-            "url"           => site_url(),
-            "deviceInfo"    => $deviceInfo,
-            "variablesInfo" => $variablesInfo,
-            "scadaInfo"     => $scadaInfo,
-            "scadaData"     => json_decode($scadaData),
-            "scadaws"       => ""
+            "url"           => site_url(),              //url podria deprecarse y usar la url generada
+            "deviceInfo"    => $deviceInfo,             // informacion del dispositivo en json
+            "variablesInfo" => $variablesInfo,          // informacion de las variables creadas por el usuario en json
+            "scadaInfo"     => $scadaInfo,              // informacion del scada en json
+            "scadaData"     => json_decode($scadaData), //informacion de los datos scada en object
+            "scadaws"       => json_encode($scadaWS ,  JSON_HEX_TAG | JSON_HEX_APOS )    //informacion de las variables en json
         ] , true );
     }
 
@@ -136,7 +138,9 @@ class View_scada extends CI_Model implements CoreInterface{
         return print_css([
             "/content/assets/apps/scada/codemirror/lib/codemirror.css",
             "/content/assets/apps/scada/generic.css",
-            "/content/assets/global/plugins/jquery-ui/jquery-ui.min.css"
+            "/content/assets/global/plugins/jquery-ui/jquery-ui.min.css",
+            "/content/assets/global/plugins/select2/css/select2.min.css",
+            "/content/assets/global/plugins/select2/css/select2-bootstrap.min.css"
         ]);
     }
 
@@ -232,8 +236,13 @@ class View_scada extends CI_Model implements CoreInterface{
                 "location"      => "footer" ,
                 "script"        => site_url() . 'content/assets/apps/projects/project_loader.js',
                 "systemjs"      => false
+            ),
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "footer" ,
+                "script"        => site_url() . 'content/assets/global/plugins/select2/js/select2.full.min.js',
+                "systemjs"      => false
             )
-
 
 
         ];

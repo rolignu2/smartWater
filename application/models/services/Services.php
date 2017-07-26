@@ -6,6 +6,8 @@ class Services extends  CI_Model
 
     protected  $databases       = null ;
 
+
+
     public function __construct()
     {
         parent::__construct();
@@ -14,6 +16,7 @@ class Services extends  CI_Model
         $this->databases = new stdClass();
         $this->databases->db_dataset = $this->db->dbprefix("data");
     }
+
 
 
     public function set_new_request(array $data ) : bool {
