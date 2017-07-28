@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!--<![endif]-->
+    <!-- BEGIN HEAD -->
+
+    <head>
+
+        <!-- BEGIN GLOBAL MANDATORY STYLES -->
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+        <link href="../assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+        <!-- END GLOBAL MANDATORY STYLES -->
+        <!-- BEGIN THEME GLOBAL STYLES -->
+        <link href="../assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+        <link href="../assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+        <!-- END THEME GLOBAL STYLES -->
+        <!-- BEGIN THEME LAYOUT STYLES -->
+        <link href="../assets/layouts/layout/css/layout.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/layouts/layout/css/themes/darkblue.min.css" rel="stylesheet" type="text/css" id="style_color" />
+        <link href="../assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
+		
+		
+		<link href="../assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/global/plugins/clockface/css/clockface.css" rel="stylesheet" type="text/css" />
+
+
+    <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+    
+
+        <div class="page-container">
+            
+            <div class="page-content-wrapper">
+                <!-- BEGIN CONTENT BODY -->
+                <div class="page-content">
+                 
+                    <!-- BEGIN PAGE TITLE-->
+                    <h3 class="page-title"> Servicios Generales
+                        <small>Configura los servicios de forma general.</small>
+                    </h3>
+                    <!-- END PAGE TITLE-->
+                    <!-- END PAGE HEADER-->
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <!-- BEGIN SAMPLE FORM PORTLET-->
+                            <div class="portlet light bordered">
+                                <div class="portlet-title">
+                                    <div class="caption font-red-sunglo">
+                                        <i class="icon-settings font-red-sunglo"></i>
+                                        <span class="caption-subject bold uppercase"> Configuracion Servicio Scada (WS->SYSTEM)</span>
+                                    </div>
+                                
+                                </div>
+                                <div class="portlet-body form">
+                                    <form role="form">
+                                        <div class="form-body">
+                                            <div class="form-group">
+                                                  <div class="mt-checkbox-list">
+                                                    <label class="mt-checkbox"> ACTIVAR BASE DE DATOS HISTORICA ( esta informacion es de tres meses atras )
+                                                        <input type="checkbox" value="1" name="scada_his" />
+                                                        <span></span>
+                                                    </label>
+                                                    <label class="mt-checkbox"> ACTIVAR RANGO DE FECHAS 
+                                                        <input type="checkbox" value="1" name="scada_date_range" id="scada_date_range"/>
+                                                        <span></span>
+                                                    </label>
+                                            </div>
+											
+											<div style="display:none;" id="scada_date_range_show" class="form-group">
+                                               
+											 
+												<div class="col-md-4">
+														<div class="input-group input-large date-picker input-daterange" data-date="" data-date-format="yy-mm-dd">
+															<input type="text" class="form-control" name="from">
+															<span class="input-group-addon"> Hasta </span>
+															<input type="text" class="form-control" name="to"> 
+														</div>
+														<span class="help-block"> Seleccionar un rango de fechas  </span>
+													
+                                                </div>
+												<br><br><br><br>
+                                            </div>
+											  
+											  <div class="form-group">
+													
+                                                    <label class="mt-checkbox"> ACTIVAR DELAY EN EL SERVICIO SCADA ( [ crea la opcion yyy-mm-dd h:m en vez de solo yyy-mm-dd  ])
+                                                        <input type="checkbox" value="1" name="test" />
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                          
+											
+                                            </div>
+                                        </div>
+										
+										<div class="note note-info">
+											<p> Estas configuraciones hace que el comportamiento de la data entregada por cada dispositivo en el servicio web  </p>
+											<p> tenga un mejor impacto en la aplicacion de scada (interfaz grafica ). </p>
+											<br>
+											<p> <b>Aviso</b> : si se activa la historica y esta tiene datos de +6 meses atras , favor activar tambien el rango de fechas </p>
+											<p> para asi evitar un timeout en el servidor o un comportamiento anormal.</p>
+										</div>
+										
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn blue">Guardar Configuracion </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                          
+                        </div>
+                       
+                    </div>
+                  
+                </div>
+                <!-- END CONTENT BODY -->
+            </div>
+            <!-- END CONTENT -->
+            <!-- END CONTENT -->
+          
+        </div>
+  
+  
+  
+        <!-- BEGIN CORE PLUGINS -->
+        <script src="../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+        <!-- END CORE PLUGINS -->
+        <!-- BEGIN THEME GLOBAL SCRIPTS -->
+        <script src="../assets/global/scripts/app.min.js" type="text/javascript"></script>
+        <!-- END THEME GLOBAL SCRIPTS -->
+        <!-- BEGIN THEME LAYOUT SCRIPTS -->
+        <script src="../assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
+        <script src="../assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
+        <script src="../assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
+        <!-- END THEME LAYOUT SCRIPTS -->
+		
+		  <script src="../assets/global/plugins/moment.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/clockface/js/clockface.js" type="text/javascript"></script>
+		
+		
+		<script>
+		
+				let date_range = $("#scada_date_range");
+				
+				
+				date_range.click( function(){
+					let date_range_show = $("#scada_date_range_show");
+					if($(this).prop("checked")){
+						date_range_show.css({ display : "inline"});
+					}
+					else {
+						date_range_show.css({ display : "none"});
+					}
+				});
+				
+	
+				 var t = function() {
+					jQuery().datepicker && $(".date-picker").datepicker({
+						rtl: App.isRTL(),
+						orientation: "left",
+						autoclose: !0
+					}), $(document).scroll(function() {
+							$("#form_modal2 .date-picker").datepicker("place")
+					})
+				};
+		
+				t();
+		
+		</script>
+		
+		   
+		
+    </body>
+
+</html>
