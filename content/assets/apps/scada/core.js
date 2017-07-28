@@ -503,15 +503,20 @@ class ScadaTools extends ScadaError  {
 
                 if(t.name == 'function'){
 
+                    try {
 
-                    if(typeof t.value == 'function' ){
-                        t.value();
-                        t.backup = String(t.value);
-                    }
-                    else if(typeof t.value == 'undefined'){
-                        t.backup = t.backup.replace(/_space_/g , '\n');
-                        t.value = eval("(" + t.backup + ")");
-                        t.value();
+                        if (typeof t.value == 'function') {
+                            t.value();
+                            t.backup = String(t.value);
+                        }
+                        else if (typeof t.value == 'undefined') {
+                            t.backup = t.backup.replace(/_space_/g, '\n');
+                            t.value = eval("(" + t.backup + ")");
+                            t.value();
+                        }
+                    }catch(e){
+                        console.log("Error al arrancar la funcion ");
+                        console.log(e);
                     }
 
                 }
