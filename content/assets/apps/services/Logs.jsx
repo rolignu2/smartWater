@@ -104,8 +104,10 @@ class Logs extends React.Component {
             idDevice : null,
             variables : null,
             params : {
-                start : 0 ,
-                end   : 200
+                start   : 0 ,
+                end     : 200,
+                isloop  : false ,
+                isdata  : true 
             }
         }
 
@@ -113,7 +115,13 @@ class Logs extends React.Component {
         this.getTableHead = this.getTableHead.bind(this);
         this.getTableBody = this.getTableBody.bind(this);
         this.callBackData = this.callBackData.bind(this);
+
+        this.callLoop = null ;
+
+
     }
+
+
 
     callBackData($this = this ){
 
@@ -124,20 +132,35 @@ class Logs extends React.Component {
             $this.state.params.end ,
             $this.state.date ,
             (c)=>{
+
+                let d = false 
+                try{
+                     c = JSON.parse(c);  
+                     d = c.length >= 1 ? true : false ;
+                }
+                catch(e){ console.log(e); }
                 console.log(c);
-                /*$this.setState({
+                $this.setState({
                     devices : $this.state.devices,
                     data    : c , 
                     date    : $this.state.date,
                     idDevice : $this.state.idDevice,
-                    variables : $this.state.variables /*,
+                    variables : $this.state.variables ,
                     params : {
                         start : $this.state.params.end  + 1 ,
-                        end  : $this.state.params.end + 200 
+                        end  : $this.state.params.end + 200 ,
+                        isloop : true ,
+                        isdata : d 
                     }
-                });*/
+                });
             }
          );
+    }
+
+    unsetLoop(){
+        try{
+         clearInterval(this.callLoop);
+        }catch(e){ console.log(e); }
     }
 
     componentWillMount(){
@@ -148,13 +171,19 @@ class Logs extends React.Component {
 
             switch(c.data.name){
                 case 'device-log':
+
                     $this.setState({
                         devices : $this.state.devices,
                         data    : null ,
                         date    : $this.state.date ,
                         idDevice : c.data.value,
                         variables : null,
-                        params : this.state.params
+                        params : {
+                            start : 0 ,
+                            end   : 200,
+                            isloop  : true ,
+                            isdata  : true 
+                        }
                     });
 
 
@@ -165,7 +194,12 @@ class Logs extends React.Component {
                                 date : this.state.date,
                                 idDevice : this.state.idDevice,
                                 variables : JSON.parse(call),
-                                params : this.state.params
+                                params : {
+                                     start : 0 ,
+                                     end   : 200,
+                                     isloop  : true , 
+                                     isdata  : true 
+                                }
                             });
 
                     });
@@ -181,7 +215,12 @@ class Logs extends React.Component {
                         date    : f,
                         idDevice : $this.state.idDevice,
                         variables : $this.state.variables,
-                        params : this.state.params
+                        params : {
+                            start : 0 ,
+                            end   : 200 ,
+                            isloop  : true  ,
+                            isdata  : true 
+                        }
                     });
                     break;
             }
@@ -248,8 +287,7 @@ class Logs extends React.Component {
      getTableBody(){
 
 
-        
-
+    
         try {
             //logs.initTableLog();
         }
@@ -282,8 +320,22 @@ class Logs extends React.Component {
     }
 
     componentDidMount(){
-       
+
+        var $this = this;
+        if(this.state.params.isdata && this.state.params.isloop ){
+
+            this.callLoop = setInterval( ()=>{
+                  $this.callBackData($this);
+            }  , 1000 );
+
+        }
+        else {
+             this.unsetLoop();
+        }
+            
     }
+
+
 
     projectContructor(){
 
