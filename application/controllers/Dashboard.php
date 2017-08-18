@@ -1066,13 +1066,18 @@ class Dashboard extends CI_Controller {
      * * */
     public function test() {
 
-       $this->load->model("variables/vartools");
+       /*$this->load->model("variables/vartools");
 
        $variables = $this->vartools->Get_ScadaWsData(3);
 
        echo "<pre>";
         print_r($variables);
-        print_r(json_encode($variables));
+        print_r(json_encode($variables));*/
+
+       $this->load->model("photon/tools_devices");
+
+       echo "<pre>";
+       print_r($this->tools_devices->getDataFrom(3,0,20,'2017-7-18'));
 
     }
 

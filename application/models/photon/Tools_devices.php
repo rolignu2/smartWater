@@ -45,7 +45,18 @@ class Tools_devices extends CI_Model implements Generic
                                     FROM [table] gd 
                                       INNER JOIN ga_package g  ON g.id = gd.id_package
                                     WHERE  gd.id_device  = ?;
-                                  "
+                                  ",
+
+            "all"  => "select
+                          GD.name,
+                          GD.id_device ,
+                          GD.particle_id as 'particle_id',
+                          GP.active ,
+                          GP.name  as 'package',
+                          GPP.name as 'project'
+                          from [tdevice] GD
+                            inner join [tpackage] GP on GP.id = GD.id_package
+                            inner join [tproject] GPP on GPP.id = GP.id_project"
         ],
 
         "variables" => [
@@ -61,7 +72,9 @@ class Tools_devices extends CI_Model implements Generic
                                 INNER JOIN [table_user] gu ON gu.id = g.id_user 
                                 WHERE g.id_device = ?",
             "data"          => "SELECT g.data FROM [table] g
-                                WHERE g.id_device = ?"
+                                WHERE g.id_device = ?",
+            
+            "dataFrom"     => "SELECT SD.data , SD.date , SD.event  FROM [gaData] SD inner join [gaDevice] GD on GD.particle_id= SD.device_id where GD.id_device = ? and SD.date between ? and ?"
 
         ]
     ];
@@ -95,6 +108,7 @@ class Tools_devices extends CI_Model implements Generic
         $this->tables->user         = $this->db->dbprefix("user");
         $this->tables->data         = $this->db->dbprefix("data");
         $this->tables->data_his     = $this->db->dbprefix("data_his");
+        $this->tables->project      = $this->db->dbprefix("project");
         $this->url_particle         = $this->meta->get_meta_value("particle_url");
         $this->url_photon           = $this->meta->get_meta_value("particle_photon_get");
         $this->war_photon           = $this->meta->get_meta_value("war");
@@ -122,9 +136,82 @@ class Tools_devices extends CI_Model implements Generic
         // TODO: Implement Object() method.
     }
 
+    public function getAllDevices(){
+
+        $query  = set_database_query($this->tables->device
+            ,"[tdevice]"
+            ,$this->querys["devices"]["all"]
+        );
+
+        $query  = set_database_query($this->tables->apk
+            ,"[tpackage]"
+            ,$query
+        );
+
+        $query  = set_database_query($this->tables->project
+            ,"[tproject]"
+            ,$query
+        );
+
+        return json_encode($this->db->query($query)->result());
+
+    }
+
+
+    public function getDataFrom($id= 0 , $from = 0  , $to = 0 , $date = ''  ){
+
+        $device =   $this->input->post("id") ?? $id  ;
+        $from   =   $this->input->post("from") ?? $from ;
+        $to     =   $this->input->post("to") ?? $to  ;
+
+        if(is_null($device)) 
+            return json_encode([]);
+        
+        $md     =   new DateTime('now');
+        $date   =   $this->input->post("date") ?? $date; 
+
+        
+        if(empty($date) || $date == null   ) {
+            $date = $md->format("Y-m-d"); 
+        }
+
+
+        $query  = set_database_query($this->tables->data
+                ,"[gaData]"
+                ,$this->querys["scada"]["dataFrom"]
+        );
+
+        $query  = set_database_query($this->tables->device
+            ,"[gaDevice]"
+            ,$query
+        );
+
+        $date1      = $date  . " 00:00:00";
+        $date2     = $date  . " 23:59:59" ;
+
+        $query .= " limit " . $from . " , " . $to;
+
+       return json_encode($this->db->query($query , [
+            $device,
+            $date1,
+            $date2
+        ])->result());
+
+
+    }
+
     public function get_variables($id_device = 0){
 
-       if($id_device === 0 ) return json_encode([]);
+
+       if($id_device === 0 ) {
+
+            $postDevice = $this->input->post("id") ?? null ;
+
+            if(is_null($postDevice))
+                return json_encode([]);
+            else
+                $id_device = $postDevice;
+       }
 
         $query  = set_database_query($this->tables->variables
                                             ,"[table]"

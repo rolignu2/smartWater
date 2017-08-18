@@ -503,6 +503,7 @@ class ScadaTools extends ScadaError  {
 
                 if(t.name == 'function'){
 
+
                     try {
 
                         if (typeof t.value == 'function') {
@@ -512,6 +513,7 @@ class ScadaTools extends ScadaError  {
                         else if (typeof t.value == 'undefined') {
                             t.backup = t.backup.replace(/_space_/g, '\n');
                             t.value = eval("(" + t.backup + ")");
+                            cnsole.log(t.backup);
                             t.value();
                         }
                     }catch(e){

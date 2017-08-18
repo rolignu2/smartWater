@@ -11,8 +11,9 @@ var Sub_Menu_Render = null;
  * ***/
 
 
-var PhotonInsert    = null;
-var PhotonRender    = null;
+var PhotonInsert            = null;
+var PhotonRender            = null;
+var DashBoardProject        = null;
 
 
 /**

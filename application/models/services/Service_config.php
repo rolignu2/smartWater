@@ -71,6 +71,13 @@ class Service_config extends CI_Model implements CoreInterface{
     public function _css()
     {
         // TODO: Implement _css() method.
+        return print_css([
+            "/content/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css",
+            "/content/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css",
+            "/content/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css",
+            "/content/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css",
+            "/content/assets/global/plugins/clockface/css/clockface.css"
+        ]);
     }
 
     /**
@@ -102,10 +109,58 @@ class Service_config extends CI_Model implements CoreInterface{
      *
      * @return array , devuelve un arreglo con las direcciones de los js
      *
+     *
+     *  <script src="../assets/global/plugins/moment.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/clockface/js/clockface.js" type="text/javascript"></script>
+     *
      */
     public function _javascript()
     {
         // TODO: Implement _javascript() method.
+        return [
+
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "footer" ,
+                "script"        => site_url() . "content/assets/global/plugins/moment.min.js" ,
+                "systemjs"      => false
+            ),
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "footer" ,
+                "script"        => site_url() . "content/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" ,
+                "systemjs"      => false
+            ),
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "footer" ,
+                "script"        => site_url() . "content/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" ,
+                "systemjs"      => false
+            ),
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "footer" ,
+                "script"        => site_url() . "content/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" ,
+                "systemjs"      => false
+            ),
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "footer" ,
+                "script"        => site_url() . "content/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" ,
+                "systemjs"      => false
+            ),
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "footer" ,
+                "script"        => site_url() . "content/assets/global/plugins/clockface/js/clockface.js" ,
+                "systemjs"      => false
+            ),
+
+        ];
     }
 
     /**
@@ -129,6 +184,7 @@ class Service_config extends CI_Model implements CoreInterface{
     public function _title()
     {
         // TODO: Implement _title() method.
+        return "Servicios generales";
     }
 
     /**

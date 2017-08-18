@@ -53,6 +53,23 @@ class Admin_core extends CI_Model implements CoreInterface {
     }
 
     public function _javascript() {
+
+
+        return [
+
+            array(
+                "type"          => "text/babel" ,
+                "location"      => "header" ,
+                "script"        => site_url() . 'content/assets/apps/dashboard/projects.js',
+                "systemjs"      => true
+            ),
+            array(
+                "type"          => "text/javascript" ,
+                "location"      => "footer" ,
+                "script"        => site_url() . 'content/assets/apps/projects/project_loader.js',
+                "systemjs"      => false
+            )
+        ];
         
     }
 
@@ -61,7 +78,7 @@ class Admin_core extends CI_Model implements CoreInterface {
     }
 
     public function _title() {
-        return "Home";
+        return "Dashboard { ... }";
     }
 
     public function _actions() {

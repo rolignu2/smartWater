@@ -27,6 +27,14 @@ var project_data =
         } , func );
     },
 
+    get_deviceInfo(callback = ()=> {}){
+        ga_request({
+            dir : "photon",
+            model : "tools_devices",
+            func : "getAllDevices"
+        } , {} , callback );
+    },
+
     loaders : () =>{
 
         $("#create_new_project").click(function () {
@@ -291,6 +299,18 @@ var project_data =
             // los pasos son primero eliminar del cloud , luego con el ok eliminar la variable del sistema
 
 
+        },
+
+        getVariables (id_device , callback ){
+
+            //$this->tools_devices->get_variables
+
+            ga_request({
+                dir : "photon",
+                model : "tools_devices",
+                func : "get_variables"
+            } , { id : id_device } , callback );
+
         }
 
 
@@ -327,6 +347,28 @@ var project_data =
             };
 
             ga_request( request , { id : id_scada } , result);
+
+        }
+
+    },
+
+    services : {
+
+        getData : function (id_device , from , to , date , callback ){
+            
+                if(id_device === 'undefined')
+                    return null ;
+
+                ga_request({
+                    dir : "photon",
+                    model : "tools_devices",
+                    func : "getDataFrom"
+                } , {
+                    from : from ,
+                    to : to ,
+                    id : id_device,
+                    date : date 
+                } , callback );
 
         }
 

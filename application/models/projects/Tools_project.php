@@ -49,7 +49,6 @@ class Tools_project extends CI_Model implements CoreInterface
         return $this->db->query($query, [$id])->result()[0]->privs ?? 0 ;
     }
 
-
     public function  get_projects(){
 
 
@@ -334,8 +333,6 @@ class Tools_project extends CI_Model implements CoreInterface
 
     }
 
-
-
     public function get_devices($id_project = 0){
 
             /**
@@ -393,7 +390,6 @@ class Tools_project extends CI_Model implements CoreInterface
                     ]);
 
     }
-
 
     public function save_status_project($status = null , $id = null ){
          if(is_null($status))
